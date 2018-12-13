@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 
 namespace Forum.Data.Common.Interfaces
 {
@@ -6,5 +7,11 @@ namespace Forum.Data.Common.Interfaces
         where T : class
     {
         IQueryable<T> Query();
+
+        Task AddAsync(T entity);
+
+        void Delete(T entity);
+
+        Task<int> SaveChangesAsync();
     }
 }
