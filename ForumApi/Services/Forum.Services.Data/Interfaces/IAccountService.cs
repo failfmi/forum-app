@@ -8,7 +8,7 @@ namespace Forum.Services.Data.Interfaces
 {
     public interface IAccountService
     {
-        Task Register(RegisterUserInputModel model);
+        Task<bool> Register(RegisterUserInputModel model);
 
         Task SeedAdmin(RegisterUserInputModel model);
     }

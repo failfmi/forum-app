@@ -25,18 +25,22 @@ namespace Forum.Services.Data
             this.signInManager = signInManager;
         }
 
-        public async Task Register(RegisterUserInputModel model)
+        public async Task<bool> Register(RegisterUserInputModel model)
         {
             var user = this.Mapper.Map<RegisterUserInputModel, User>(model);
 
+            var result = false;
             try
             {
-                await this.UserManager.CreateAsync(user);
+                await this.UserManager.CreateAsync(user, model.Password);
+                result = this.UserManager.AddToRoleAsync(user, Enum.GetName(typeof(Roles), 2)).GetAwaiter().GetResult().Succeeded;
             }
             catch (Exception e)
             {
                 this.Logger.LogWarning(e, "Creation of ApplicationUser and its role resulted in failure: " + e.Message);
             }
+
+            return result;
         }
 
         public async Task SeedAdmin(RegisterUserInputModel model)
