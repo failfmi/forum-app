@@ -20,6 +20,11 @@ namespace Forum.Data
                 .Entity<User>()
                 .Property(u => u.IsActive)
                 .HasDefaultValue(true);
+
+            builder
+                .Entity<User>()
+                .Property(u => u.IsLogged)
+                .HasDefaultValue(false);
         }
     }
 }

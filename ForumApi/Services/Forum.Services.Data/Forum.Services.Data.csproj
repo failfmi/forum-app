@@ -4,4 +4,13 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\Forum.Data.Common\Forum.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\Forum.Data.DataTransferObjects\Forum.Data.DataTransferObjects.csproj" />
+  </ItemGroup>
+
 </Project>

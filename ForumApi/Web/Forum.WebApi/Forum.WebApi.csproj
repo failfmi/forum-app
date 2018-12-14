@@ -9,10 +9,14 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\..\Data\Forum.Data.Common\Forum.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\Forum.Data.DataTransferObjects\Forum.Data.DataTransferObjects.csproj" />
+    <ProjectReference Include="..\..\Data\Forum.Data\Forum.Data.csproj" />
+    <ProjectReference Include="..\..\Services\Forum.Services.Data\Forum.Services.Data.csproj" />
   </ItemGroup>
 
 </Project>

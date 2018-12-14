@@ -13,8 +13,5 @@ namespace Forum.Data.Models.Users
 
         [Required]
         public bool? IsLogged { get; set; }
-
-        [Required, Column(TypeName = "DateTime")]
-        public DateTime DateLogged { get; set; }
     }
 }
