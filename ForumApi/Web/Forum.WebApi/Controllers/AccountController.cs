@@ -30,14 +30,16 @@ namespace Forum.WebApi.Controllers
         [ProducesDefaultResponseType]
         public async Task<object> Register([FromBody] RegisterUserInputModel model)
         {
-            var result = await this.accountService.Register(model);
-
-            if (result)
+            try
             {
-                return this.Ok(new ReturnMessage() {Message = "Registration Successful."});
-            }
+                await this.accountService.Register(model);
 
-            return this.BadRequest();
+                return this.Ok(new ReturnMessage() { Message = "Registration Successful." });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new ReturnMessage() { Message = e.Message });
+            }
         }
     }
 }

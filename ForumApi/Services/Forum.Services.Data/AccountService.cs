@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -25,22 +26,22 @@ namespace Forum.Services.Data
             this.signInManager = signInManager;
         }
 
-        public async Task<bool> Register(RegisterUserInputModel model)
+        public async Task Register(RegisterUserInputModel model)
         {
             var user = this.Mapper.Map<RegisterUserInputModel, User>(model);
 
-            var result = false;
-            try
+            if (this.UserManager.Users.Count(u => u.UserName == user.UserName) != 0)
             {
-                await this.UserManager.CreateAsync(user, model.Password);
-                result = this.UserManager.AddToRoleAsync(user, Enum.GetName(typeof(Roles), 2)).GetAwaiter().GetResult().Succeeded;
-            }
-            catch (Exception e)
-            {
-                this.Logger.LogWarning(e, "Creation of ApplicationUser and its role resulted in failure: " + e.Message);
+                throw new Exception("Username is already taken!");
             }
 
-            return result;
+            if (this.UserManager.Users.Count(u => u.Email == user.Email) != 0)
+            {
+                throw new Exception("Email is already taken!");
+            }
+
+            await this.UserManager.CreateAsync(user, model.Password);
+            await this.UserManager.AddToRoleAsync(user, Enum.GetName(typeof(Roles), 2));
         }
 
         public async Task SeedAdmin(RegisterUserInputModel model)
