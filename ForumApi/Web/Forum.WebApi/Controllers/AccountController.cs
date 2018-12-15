@@ -34,7 +34,7 @@ namespace Forum.WebApi.Controllers
             {
                 await this.accountService.Register(model);
 
-                return this.Ok(new ReturnMessage() { Message = "Registration Successful." });
+                return this.Ok(new ReturnMessage() { Message = "You have successfully registered! Now you should be able to log in!" });
             }
             catch (Exception e)
             {

@@ -73,8 +73,11 @@ namespace Forum.WebApi
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<ForumContext>();
-                context.Database.Migrate();
-                
+
+                if (env.IsDevelopment())
+                {
+                    context.Database.Migrate();
+                }
                 var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
                 var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
                 var accountService = serviceScope.ServiceProvider.GetService<IAccountService>();
