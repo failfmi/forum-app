@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Forum.Data.DataTransferObjects.InputModels.User;
-using Forum.WebApi;
 using Forum.WebApi.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
