@@ -12,8 +12,4 @@
     <ProjectReference Include="..\Forum.Data.Models\Forum.Data.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewModels\User\" />
-  </ItemGroup>
-
 </Project>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Forum.Data.DataTransferObjects.Enums
+﻿namespace Forum.Data.DataTransferObjects.Enums
 {
     public enum Roles
     {

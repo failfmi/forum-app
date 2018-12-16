@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace Forum.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class BaseController : ControllerBase
     {

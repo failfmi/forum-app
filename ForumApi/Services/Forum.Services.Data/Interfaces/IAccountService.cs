@@ -11,5 +11,7 @@ namespace Forum.Services.Data.Interfaces
         Task Register(RegisterUserInputModel model);
 
         Task SeedAdmin(RegisterUserInputModel model);
+
+        Task<string> Login(LoginUserInputModel model);
     }
 }
