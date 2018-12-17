@@ -11,6 +11,7 @@ using Forum.Data.DataTransferObjects;
 using Forum.Data.Models.Users;
 using Forum.Services.Data;
 using Forum.Services.Data.Interfaces;
+using Forum.Services.Data.Utils;
 using Forum.WebApi.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -53,6 +54,8 @@ namespace Forum.WebApi
             var jwtSettingsSection = this.Configuration.GetSection("JwtSettings");
 
             services.Configure<JwtSettings>(jwtSettingsSection);
+            services.Configure<FacebookSettings>(
+                this.Configuration.GetSection("Authentication").GetSection("Facebook"));
 
             var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
             var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
@@ -79,6 +82,7 @@ namespace Forum.WebApi
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IExternalAccountService, ExternalAccountService>();
 
             services.AddIdentity<User, IdentityRole>(options =>
                 {

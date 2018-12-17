@@ -88,7 +88,7 @@ namespace Forum.Services.Data
             }
         }
 
-        private string GenerateToken(User user)
+        protected string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this.jwtSettings.Secret);

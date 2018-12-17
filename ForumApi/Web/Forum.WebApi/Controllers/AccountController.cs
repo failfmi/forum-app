@@ -19,6 +19,7 @@ namespace Forum.WebApi.Controllers
     public class AccountController : BaseController
     {
         private readonly IAccountService accountService;
+
         public AccountController(IAccountService accountService, ILogger<BaseController> logger)
             : base(logger)
         {
