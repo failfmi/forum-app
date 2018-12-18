@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Forum.Data.Models.Users
 {
-    public class UserLoginInfo : BaseModel
+    public class LoginInfo : BaseModel
     {
         [MaxLength(50)]
         public string Ip { get; set; }
@@ -20,7 +20,7 @@ namespace Forum.Data.Models.Users
         public DateTime LoginDate { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public User User { get; set; }
     }

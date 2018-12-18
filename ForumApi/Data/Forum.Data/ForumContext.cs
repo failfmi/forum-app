@@ -12,6 +12,8 @@ namespace Forum.Data
         {
         }
 
+        public DbSet<LoginInfo> LoginInfo { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

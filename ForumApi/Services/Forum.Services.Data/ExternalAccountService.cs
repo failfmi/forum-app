@@ -11,22 +11,21 @@ using Forum.Data.Models.Users;
 using Forum.Services.Data.Interfaces;
 using Forum.Services.Data.Utils;
 using Forum.WebApi.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using LoginInfo = Forum.Data.Models.Users.LoginInfo;
 
 namespace Forum.Services.Data
 {
     public class ExternalAccountService : AccountService, IExternalAccountService
     {
-        private readonly HttpClient client;
         private readonly FacebookSettings fbSettings;
 
-        public ExternalAccountService(IOptions<FacebookSettings> fbSettings, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, ILogger<BaseService> logger, IMapper mapper, IRepository<User> userRepository, SignInManager<User> signInManager)
-            : base(userManager, jwtSettings, logger, mapper, userRepository, signInManager)
+        public ExternalAccountService(IOptions<FacebookSettings> fbSettings, UserManager<User> userManager, IHttpContextAccessor accessor, IOptions<GeoLocationSettings> geoLocationSettings, IOptions<JwtSettings> jwtSettings, ILogger<BaseService> logger, IMapper mapper, IRepository<User> userRepository, IRepository<LoginInfo> loginInfoRepository, SignInManager<User> signInManager) : base(userManager, accessor, geoLocationSettings, jwtSettings, logger, mapper, userRepository, loginInfoRepository, signInManager)
         {
-            this.client = new HttpClient();
             this.fbSettings = fbSettings.Value;
         }
 
@@ -51,7 +50,7 @@ namespace Forum.Services.Data
             var user = await this.UserManager.FindByEmailAsync(userInfo.Email);
             if (user is null)
             {
-                var appUser = new User()
+                var appUser = new User
                 {
                     Email = userInfo.Email,
                     UserName = userInfo.Email,

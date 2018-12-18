@@ -12,10 +12,12 @@ using Forum.Data.Models.Users;
 using Forum.Services.Data;
 using Forum.Services.Data.Interfaces;
 using Forum.Services.Data.Utils;
+using Forum.WebApi.Middleware;
 using Forum.WebApi.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +58,8 @@ namespace Forum.WebApi
             services.Configure<JwtSettings>(jwtSettingsSection);
             services.Configure<FacebookSettings>(
                 this.Configuration.GetSection("Authentication").GetSection("Facebook"));
+            services.Configure<GeoLocationSettings>(
+                this.Configuration.GetSection("GeoLocation"));
 
             var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
             var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
@@ -131,6 +135,11 @@ namespace Forum.WebApi
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+            }
+
+            if (env.EnvironmentName == "Testing")
+            {
+                app.UseMiddleware<FakeRemoteIpAddressMiddleware>();
             }
 
             app.UseCors(builder => builder

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,29 +11,51 @@ using Forum.Data;
 using Forum.Data.Common.Interfaces;
 using Forum.Data.DataTransferObjects.Enums;
 using Forum.Data.DataTransferObjects.InputModels.User;
+using Forum.Data.DataTransferObjects.ViewModels.IpInformation;
 using Forum.Data.Models.Users;
 using Forum.Services.Data.Interfaces;
+using Forum.Services.Data.Utils;
 using Forum.WebApi.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using LoginInfo = Forum.Data.Models.Users.LoginInfo;
 
 namespace Forum.Services.Data
 {
     public class AccountService : BaseService, IAccountService
     {
+        protected readonly HttpClient client;
+        protected readonly GeoLocationSettings geoLocationSettings;
+        protected readonly IHttpContextAccessor accessor;
+        protected readonly IRepository<LoginInfo> loginInfoRepository;
+
         private readonly SignInManager<User> signInManager;
         private readonly IRepository<User> userRepository;
         private readonly JwtSettings jwtSettings;
 
-        public AccountService(UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, ILogger<BaseService> logger, IMapper mapper, IRepository<User> userRepository, SignInManager<User> signInManager)
+        public AccountService(UserManager<User> userManager,
+                            IHttpContextAccessor accessor,
+                            IOptions<GeoLocationSettings> geoLocationSettings,
+                            IOptions<JwtSettings> jwtSettings,
+                            ILogger<BaseService> logger,
+                            IMapper mapper,
+                            IRepository<User> userRepository,
+                            IRepository<LoginInfo> loginInfoRepository,
+                            SignInManager<User> signInManager)
             : base(userManager, logger, mapper)
         {
             this.userRepository = userRepository;
             this.signInManager = signInManager;
             this.jwtSettings = jwtSettings.Value;
+            this.client = new HttpClient();
+            this.geoLocationSettings = geoLocationSettings.Value;
+            this.loginInfoRepository = loginInfoRepository;
+            this.accessor = accessor;
         }
 
         public async Task Register(RegisterUserInputModel model)
@@ -67,6 +90,25 @@ namespace Forum.Services.Data
             {
                 throw new Exception("Invalid username or password!");
             }
+
+            var ipAddress = this.accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+
+            var apiIpResult = await client.GetStringAsync(this.geoLocationSettings.Url
+                                                         + ipAddress
+                                                         + this.geoLocationSettings.AccessKey);
+
+            var ipInformation = JsonConvert.DeserializeObject<IpInformationViewModel>(apiIpResult);
+
+            var logInfo = new LoginInfo
+            {
+                UserId = user.Id,
+                Ip = ipInformation.IP,
+                Location = $"{ipInformation.City}, {ipInformation.RegionName}, {ipInformation.CountryName}",
+                LoginDate = DateTime.UtcNow
+            };
+
+            await this.loginInfoRepository.AddAsync(logInfo);
+            await this.loginInfoRepository.SaveChangesAsync();
 
             return GenerateToken(user);
         }
