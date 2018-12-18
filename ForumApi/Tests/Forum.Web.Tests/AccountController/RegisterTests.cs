@@ -109,6 +109,7 @@ namespace Forum.Web.Tests.AccountController
         [InlineData("test", "12341234", "test")]
         [InlineData("test@test.com", "123", "test")]
         [InlineData("test@test.com", "12341234", "t")]
+        [InlineData("test@test.com", "12341234", "test@")]
         public async Task RegisterFailWithInvalidModelData(string email, string password, string username)
         {
             var user = new RegisterUserInputModel

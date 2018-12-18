@@ -85,7 +85,6 @@ namespace Forum.Web.Tests.AccountController
                 Encoding.UTF8,
                 "application/json");
 
-
             var response = await client.PostAsync(LoginEndpoint, json);
 
             var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
@@ -108,7 +107,6 @@ namespace Forum.Web.Tests.AccountController
                 JsonConvert.SerializeObject(user),
                 Encoding.UTF8,
                 "application/json");
-
 
             var response = await client.PostAsync(LoginEndpoint, json);
 
