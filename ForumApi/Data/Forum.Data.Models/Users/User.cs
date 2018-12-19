@@ -13,5 +13,7 @@ namespace Forum.Data.Models.Users
 
         [Required]
         public bool? IsLogged { get; set; }
+
+        public ICollection<LoginInfo> LoginInfo = new HashSet<LoginInfo>();
     }
 }

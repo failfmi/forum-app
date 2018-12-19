@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Forum.Data.Models.Users
 {
-    public class LoginInfo : BaseModel
+    public class LoginInfo : BaseModel<int>
     {
         [MaxLength(50)]
         public string Ip { get; set; }

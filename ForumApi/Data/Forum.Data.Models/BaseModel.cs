@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Forum.Data.Models
 {
-    public class BaseModel
+    public class BaseModel<T>
     {
         [Key]
-        public int Id { get; set; }
+        public T Id { get; set; }
     }
 }
