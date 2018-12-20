@@ -27,6 +27,11 @@ namespace Forum.Data.Common
             return this.set.AddAsync(entity);
         }
 
+        public void Update(T entity)
+        {
+            this.set.Update(entity);
+        }
+
         public void Delete(T entity)
         {
             this.set.Remove(entity);

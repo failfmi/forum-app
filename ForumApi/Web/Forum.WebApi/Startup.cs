@@ -87,6 +87,7 @@ namespace Forum.WebApi
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IExternalAccountService, ExternalAccountService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddIdentity<User, IdentityRole>(options =>
                 {

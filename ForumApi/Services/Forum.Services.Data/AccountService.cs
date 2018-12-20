@@ -134,6 +134,7 @@ namespace Forum.Services.Data
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this.jwtSettings.Secret);
+            var role = this.UserManager.GetRolesAsync(user).GetAwaiter().GetResult();
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -142,6 +143,7 @@ namespace Forum.Services.Data
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, role.First()),
                     new Claim("isAdmin", this.UserManager.IsInRoleAsync(user, "Admin").GetAwaiter().GetResult().ToString(), ClaimValueTypes.Boolean),
                     new Claim("isBanned", (!user.IsActive).ToString(), ClaimValueTypes.Boolean)
                 }),
