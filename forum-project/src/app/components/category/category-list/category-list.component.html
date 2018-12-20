@@ -1,0 +1,22 @@
+<mat-card>
+  <h4 class="card-header text-center">Categories</h4>
+  <div class="row car-body text-center" *ngIf="leftCatSet || rightCatSet; else notFound">
+      <div class="col-lg-6">
+          <ul class="list-group">
+              <li class="list-group-item btn-custom" *ngFor="let c of leftCatSet">
+                  <button mat-raised-button mat-primary (click)="changeCategory(c)">{{c.name}}</button>
+              </li>
+          </ul>
+      </div>
+      <div class="col-lg-6">
+          <ul class="list-group">
+              <li class="list-group-item btn-custom" *ngFor="let c of rightCatSet">
+                  <button mat-raised-button mat-primary (click)="changeCategory(c)">{{c.name}}</button>
+              </li>
+          </ul>
+      </div>
+  </div>
+  <ng-template #notFound>
+      <span>No categories found.</span>
+  </ng-template>
+</mat-card>

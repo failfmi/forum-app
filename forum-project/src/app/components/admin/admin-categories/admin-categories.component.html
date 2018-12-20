@@ -1,0 +1,52 @@
+<div class="container mt-5" *ngIf="categories; else notFound">
+  <div>
+    <form class="form-group text-center" [formGroup]="createForm">
+      <mat-form-field>
+        <input matInput type="text" formControlName="name" placeholder="Name" />
+        <mat-error *ngIf="name.invalid && (name.dirty || name.touched) && name.errors.required">
+          Name is required.
+        </mat-error>
+        <mat-error *ngIf="name.invalid && (name.dirty || name.touched) && name.errors.minlength">
+          Must be at least 3 symbols.
+        </mat-error>
+      </mat-form-field>
+    </form>
+    <mat-dialog-actions>
+      <button [disabled]="!createForm.valid" mat-raised-button mat-primary (click)="createCategory()">Create Category</button>
+    </mat-dialog-actions>
+  </div>
+  <div class="row topmargin">
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th>Category Name</th>
+          <th>Date of publication</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr [@cats] *ngFor="let c of categories | paginate: { id: 'allCats', itemsPerPage: pageSize, currentPage: currentPage}">
+            <td>{{c.name}}</td>
+            <td>{{c.creationDate.toLocaleString()}}</td>
+            <td><div>
+              <button class="margin" mdbBtn type="button" color="danger" mdbWavesEffect size="sm" (click)="deleteCategory(c._id)">Delete</button>
+              <button mdbBtn type="button" color="warning" mdbWavesEffect size="sm" (click)="openEditCategoryDialog(c)">Edit</button>
+            </div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <pagination-controls
+  id="allCats"
+  (pageChange)="changePage($event)"
+  maxSize="9"
+  directionLinks="true"
+  autoHide="true"
+  previousLabel="Previous"
+  nextLabel="Next"
+  screenReaderPaginationLabel="Pagination"
+  screenReaderPageLabel="page"
+  screenReaderCurrentLabel="You're on page"
+  >
+  </pagination-controls>
+</div>

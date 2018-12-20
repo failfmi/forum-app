@@ -1,0 +1,35 @@
+<!--Carousel Wrapper-->
+<div class="container mt-5">
+    <div class="homepage row">
+        <div class="col-md-8">
+            <!--Carousel Wrapper-->
+        <mdb-carousel [isControls]="true" class="carousel slide carousel-fade" [animation]="'fade'">
+            <!--First slide-->
+            <mdb-carousel-item>
+                <div class="view w-100">
+                    <img class="d-block w-100" src="../../../assets/forum-1.png" alt="First slide">
+                    <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
+                </div>
+                <div class="carousel-caption">
+                    <h3 class="h3-responsive">Welcome to Forum</h3>
+                </div>
+            </mdb-carousel-item>
+            <!--/First slide-->
+            <!--Third slide-->
+            <mdb-carousel-item>
+                <div class="view w-100">
+                    <img class="d-block w-100" src="../../../assets/1_community_banner-1.png" alt="Third slide">
+                    <div class="mask rgba-black-slight waves-light" mdbWavesEffect></div>
+                </div>
+                <div class="carousel-caption">
+                    <h3 class="h3-responsive">Welcome to Forum</h3>
+                </div>
+            </mdb-carousel-item>
+            <!--/Third slide-->
+        </mdb-carousel>
+        <!--/.Carousel Wrapper-->
+        </div>
+        <app-category-list [leftCatSet]="leftCatSet" [rightCatSet]="rightCatSet"></app-category-list>
+    </div>
+    <app-posts-list [posts]="posts"></app-posts-list>
+</div>

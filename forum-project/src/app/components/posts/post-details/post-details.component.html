@@ -1,0 +1,40 @@
+<div class="container mt-5" *ngIf="post; else notFound">
+  <div class="row blog-entries">
+    <div class="col-md-12 col-lg-8 main-content">
+      <h1 class="mb-4">{{post.title}}</h1>
+      <div class="post-meta">
+                  <a mat-flat-button (click)="changeCategory(post.category)">{{post.category.name}} </a>
+                  <span class="mr-2"> {{post.creationDate.toLocaleString()}} </span>
+                  <span class="ml-2"><span class="fa fa-comments"></span> {{post.comments.length}}</span>
+                </div>
+      <div class="post-content-body little-margin">
+        <p>{{post.body}}</p>
+      </div>
+      <div *ngIf="authService.isAuthenticated() || authService.isAdmin()">
+        <a mat-raised-button routerLink="/comments/create/{{post._id}}">Add Comment</a>
+        <a mat-raised-button routerLink="/posts/edit/{{post._id}}" *ngIf="sameAuthor() || authService.isAdmin()">Edit</a>
+        <a mat-raised-button *ngIf="sameAuthor() || authService.isAdmin()" (click)="delete()">Delete</a>
+      </div>
+    </div>
+  </div>
+  <div class="pt-5">
+    <h3 class="mb-5">{{post.comments.length}} Comments</h3>
+    <ul class="comment-list">
+      <li class="comment" *ngFor="let c of post.comments">
+        <div class="comment-body">
+          <h3>{{c.creatorName}}</h3>
+          <div class="meta">{{c.creationDate.toLocaleString()}}</div>
+          <div class="little-margin"><p>{{c.text}}</p></div>
+          <div *ngIf="c.creatorName === authService.userName || authService.isAdmin()">
+            <a mat-raised-button (click)="openEditCommentDialog(c)">Edit my comment</a>
+            <a mat-raised-button (click)="deleteComment(c._id)">Delete my comment</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <!-- END comment-list -->
+  </div>
+</div>
+<ng-template #notFound>
+  <app-not-found></app-not-found>
+</ng-template>

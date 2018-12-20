@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Edit Category</h1>
+<mat-dialog-content>
+  <form [formGroup]="editForm">
+    <mat-form-field>
+      <input matInput formControlName="name" placeHolder="Body" />
+      <mat-error *ngIf="name.invalid && (name.dirty || name.touched) && name.errors.required">
+        Body is required.
+      </mat-error>
+      <mat-error *ngIf="name.invalid && (name.dirty || name.touched) && name.errors.minlength">
+        Name must be at least 3 symbols
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button (click)="onNoClick()">Cancel</button>
+  <button [disabled]="!editForm.valid" mat-flat-button mat-primary (click)="editCategory()">Edit Category</button>
+</mat-dialog-actions>

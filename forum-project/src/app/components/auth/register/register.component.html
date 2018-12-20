@@ -1,0 +1,51 @@
+<h1 mat-dialog-title>Register</h1>
+<mat-dialog-content>
+  <form [formGroup]="registerForm">
+    <mat-form-field>
+      <input matInput type="text" formControlName="username" placeholder="Username" minlength="4"/>
+      <mat-error *ngIf="username.invalid && (username.dirty || username.touched) && username.errors.required">
+        Username is required.
+      </mat-error>
+      <mat-error *ngIf="username.invalid && (username.dirty || username.touched) && username.errors.minlength">
+        Username must be at least 4 symbols.
+      </mat-error>
+      <mat-error *ngIf="username.invalid && (username.dirty || username.touched) && username.errors.pattern">
+        Username must not have "@" in itself.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="email" email formControlName="email" placeholder="Email"/>
+      <mat-error *ngIf="email.invalid && (email.dirty || email.touched) && email.errors.required">
+        Email is required.
+      </mat-error>
+      <mat-error *ngIf="email.invalid && (email.dirty || email.touched) && email.errors.email">
+        Invalid email.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="password" formControlName="password" minlength="6" placeholder="Password"/>
+      <mat-error *ngIf="password.invalid && (password.dirty || password.touched) && password.errors.required">
+        Password is required.
+      </mat-error>
+      <mat-error *ngIf="password.invalid && (password.dirty || password.touched) && password.errors.minlength">
+        Password must be at least 8 symbols.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="password" formControlName="confirmPassword" placeholder="Confirm Password" />
+      <mat-error *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) && confirmPassword.errors.required">
+        Password is required.
+      </mat-error>
+      <mat-error *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) && confirmPassword.errors.compare">
+        Passwords do not match.
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button [disabled]="!registerForm.valid" mat-raised-button mat-primary (click)="register()">Register</button>
+</mat-dialog-actions>

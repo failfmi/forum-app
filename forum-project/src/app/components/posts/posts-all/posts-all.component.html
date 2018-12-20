@@ -1,0 +1,47 @@
+<div class="container mt-5" *ngIf="postsToShow">
+  <div class="margin">
+    <h5>Selected Category</h5>
+    <mat-select name="category" placeholder="Select a Category" [(ngModel)]="selectedCategory">
+      <mat-option [value]="allValue" (click)="selectAllCategories()">All</mat-option>
+      <mat-option *ngFor="let c of categories" [value]="c.name" (click)="changeCategory(c)">{{c.name}}</mat-option>
+    </mat-select>
+  </div>
+  <div>
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Body</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Publish date</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="postsToShow.length > 0; else noPosts">
+        <tr class="pointer" *ngFor="let p of postsToShow | paginate: { id: 'allPosts', itemsPerPage: pageSize, currentPage: currentPage}" (click)="navigate(p._id)">
+            <td>{{p.title.substr(0, 50)}}</td>
+            <td>{{p.body.substr(0, 50)}}...</td>
+            <td>{{p.authorName}}</td>
+            <td>{{p.category.name}}</td>
+            <td>{{p.creationDate.toLocaleString()}}</td>
+        </tr>
+      </tbody>
+      <ng-template #noPosts class="borderless">
+        No posts under this category.
+      </ng-template>
+    </table>
+  </div>
+  <pagination-controls
+  id="allPosts"
+  (pageChange)="changePage($event)"
+  maxSize="9"
+  directionLinks="true"
+  autoHide="true"
+  previousLabel="Previous"
+  nextLabel="Next"
+  screenReaderPaginationLabel="Pagination"
+  screenReaderPageLabel="page"
+  screenReaderCurrentLabel="You're on page"
+  >
+  </pagination-controls>
+</div>

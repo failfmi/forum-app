@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="page-header text-center">
+    <h2>Create Comment</h2>
+  </div>
+  <form class="form-group text-center" [formGroup]="createForm">
+      <mat-form-field>
+        <textarea matInput formControlName="text" placeHolder="Body" rows="20" cols="30"></textarea>
+        <mat-error *ngIf="text.invalid && (text.dirty || text.touched) && text.errors.required">
+          Body is required.
+        </mat-error>
+        <mat-error *ngIf="text.invalid && (text.dirty || text.touched) && text.errors.minlength">
+          Body must be at least 6 symbols
+        </mat-error>
+      </mat-form-field>
+  </form>
+  <mat-dialog-actions>
+    <button [disabled]="!createForm.valid" mat-raised-button mat-primary (click)="createComment()">Create Comment</button>
+  </mat-dialog-actions>
+</div>

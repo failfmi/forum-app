@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="page-header text-center">
+    <h2>Create Post</h2>
+  </div>
+  <form class="form-group text-center" [formGroup]="createForm">
+      <mat-form-field>
+        <mat-select name="category" placeholder="Select a Category" formControlName="category">
+          <mat-option *ngFor="let c of categories" [value]="c.name">{{c.name}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="category.invalid && (category.dirty || category.touched) && category.errors.required">
+          Category is required.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+          <input matInput type="text" formControlName="title" placeholder="Title" />
+          <mat-error *ngIf="title.invalid && (title.dirty || title.touched) && title.errors.required">
+            Title is required.
+          </mat-error>
+          <mat-error *ngIf="title.invalid && (title.dirty || title.touched) && title.errors.minlength">
+            Title must be at least 6 symbols
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput formControlName="body" placeHolder="Body" rows="20" cols="30"></textarea>
+          <mat-error *ngIf="body.invalid && (body.dirty || body.touched) && body.errors.required">
+            Body is required.
+          </mat-error>
+          <mat-error *ngIf="body.invalid && (body.dirty || body.touched) && body.errors.minlength">
+            Body must be at least 10 symbols
+          </mat-error>
+          <mat-error *ngIf="body.invalid && (body.dirty || body.touched) && body.errors.maxlength">
+            Body must be maximum 1000 symbols
+            </mat-error>
+        </mat-form-field>
+  </form>
+  <mat-dialog-actions>
+    <button [disabled]="!createForm.valid" mat-raised-button mat-primary (click)="createPost()">Create Post</button>
+  </mat-dialog-actions>
+</div>

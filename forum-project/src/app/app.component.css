@@ -1,0 +1,20 @@
+/* header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.site {
+  display: flex;
+  flex-direction: column;
+  min-height: 96vh;
+}
+
+.content {
+  flex: 1;
+  margin-top: 60px;
+}
+
+footer {
+  margin-top:40px;
+} */

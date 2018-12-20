@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Edit my comment</h1>
+<mat-dialog-content>
+  <form [formGroup]="editForm">
+    <mat-form-field>
+      <textarea matInput formControlName="text" placeHolder="Body"></textarea>
+      <mat-error *ngIf="text.invalid && (text.dirty || text.touched) && text.errors.required">
+        Body is required.
+      </mat-error>
+      <mat-error *ngIf="text.invalid && (text.dirty || text.touched) && text.errors.minlength">
+        Body must be at least 6 symbols
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button [disabled]="!editForm.valid" mat-raised-button mat-primary (click)="editComment()">Edit Comment</button>
+</mat-dialog-actions>
