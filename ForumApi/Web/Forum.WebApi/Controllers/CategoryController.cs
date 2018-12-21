@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Forum.Data.DataTransferObjects.InputModels.Category;
+using Forum.Data.DataTransferObjects.ViewModels;
 using Forum.Data.DataTransferObjects.ViewModels.Category;
 using Forum.Services.Data.Interfaces;
 using Forum.WebApi.Utils;
@@ -38,7 +39,7 @@ namespace Forum.WebApi.Controllers
                 {
                     var category = await this.categoryService.Create(model);
 
-                    return this.Ok(new CategorySuccessReturnMessage
+                    return this.Ok(new CreateEditReturnMessage<CategoryViewModel>
                     { Message = "Category added successfully", Data = category });
                 }
                 catch (Exception e)
@@ -69,7 +70,7 @@ namespace Forum.WebApi.Controllers
                 {
                     var category = await this.categoryService.Edit(model);
 
-                    return this.Ok(new CategorySuccessReturnMessage
+                    return this.Ok(new CreateEditReturnMessage<CategoryViewModel>
                     { Message = "Category edited successfully", Data = category });
                 }
                 catch (Exception e)

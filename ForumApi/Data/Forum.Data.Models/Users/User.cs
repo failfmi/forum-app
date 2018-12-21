@@ -15,5 +15,9 @@ namespace Forum.Data.Models.Users
         public bool? IsLogged { get; set; }
 
         public ICollection<LoginInfo> LoginInfo = new HashSet<LoginInfo>();
+
+        public ICollection<Post> Posts = new HashSet<Post>();
+
+        public ICollection<Comment> Comments = new HashSet<Comment>();
     }
 }
