@@ -47,7 +47,7 @@ namespace Forum.WebApi.Controllers
                 }
             }
 
-            return this.Unauthorized(new ReturnMessage {Message = "You are unauthorized!"});
+            return this.Unauthorized(new ReturnMessage { Message = "You are unauthorized!" });
         }
 
         [Authorize]
@@ -79,6 +79,65 @@ namespace Forum.WebApi.Controllers
             }
 
             return this.Unauthorized();
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesDefaultResponseType]
+        public async Task<object> Delete(int id)
+        {
+            if (this.User.IsInRole("Admin"))
+            {
+                try
+                {
+                    await this.categoryService.Delete(id);
+                    return this.Ok(new ReturnMessage { Message = $"Category with id {id} successfully deleted" });
+                }
+                catch (Exception e)
+                {
+                    return this.BadRequest(new ReturnMessage { Message = e.Message });
+                }
+
+            }
+
+            return this.Unauthorized();
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<object> Get(int id)
+        {
+            try
+            {
+                return this.Ok(this.categoryService.GetById(id));
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new ReturnMessage { Message = e.Message });
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<object> All()
+        {
+            try
+            {
+                var categories = this.categoryService.All();
+                return this.Ok(new CategoryAllReturn { Data = categories });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new ReturnMessage { Message = e.Message });
+            }
         }
     }
 }

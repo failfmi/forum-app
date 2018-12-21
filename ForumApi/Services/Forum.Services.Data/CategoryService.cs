@@ -70,6 +70,25 @@ namespace Forum.Services.Data
             throw new NotImplementedException();
         }
 
+        public CategoryViewModel GetById(int id)
+        {
+            if (IsValidCategoryId(id))
+            {
+                throw new Exception($"Category with id {id} does not exist.");
+            }
+
+            var category = this.categoryRepository.Query().FirstOrDefault(c => c.Id == id);
+
+            return this.Mapper.Map<CategoryViewModel>(category);
+        }
+
+        public ICollection<CategoryViewModel> All()
+        {
+            var categories = this.categoryRepository.Query().ToList();
+
+            return this.Mapper.Map<ICollection<CategoryViewModel>>(categories);
+        }
+
         private bool IsValidCategoryId(int id)
         {
             return this.categoryRepository.Query().Count(c => c.Id == id) == 0;

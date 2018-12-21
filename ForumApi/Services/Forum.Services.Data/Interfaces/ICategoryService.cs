@@ -14,5 +14,9 @@ namespace Forum.Services.Data.Interfaces
         Task<CategoryViewModel> Edit(CategoryInputEditModel model);
 
         Task Delete(int id);
+
+        CategoryViewModel GetById(int id);
+
+        ICollection<CategoryViewModel> All();
     }
 }
