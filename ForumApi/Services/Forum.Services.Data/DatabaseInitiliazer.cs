@@ -7,6 +7,7 @@ using Forum.Data;
 using Forum.Data.Common.Interfaces;
 using Forum.Data.DataTransferObjects.Enums;
 using Forum.Data.DataTransferObjects.InputModels.User;
+using Forum.Data.Models;
 using Forum.Data.Models.Users;
 using Forum.Services.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -18,11 +19,13 @@ namespace Forum.Services.Data
     public class DatabaseInitiliazer : IDatabaseInitializer
     {
         public async Task Seed(RoleManager<IdentityRole> roleManager, UserManager<User> userManager,
-            IConfiguration configuration, IAccountService accountService, ILogger<IDatabaseInitializer> logger, IRepository<User> userRepository)
+            IConfiguration configuration, IAccountService accountService, ILogger<IDatabaseInitializer> logger, IRepository<User> userRepository, IRepository<Category> categoryRepository)
         {
             await this.ConfigureUserRoles(roleManager, logger);
 
             await this.SeedUser(userRepository, configuration, accountService, logger);
+
+            await this.SeedCategories(categoryRepository, logger);
         }
 
         private async Task ConfigureUserRoles(RoleManager<IdentityRole> roleManager, ILogger<IDatabaseInitializer> logger)
@@ -64,6 +67,24 @@ namespace Forum.Services.Data
                 await accountService.SeedAdmin(adminModel);
 
                 logger.LogWarning("End Seeding User Successfully");
+            }
+        }
+
+        private async Task SeedCategories(IRepository<Category> categoryRepository, ILogger<IDatabaseInitializer> logger)
+        {
+            var categories = new string[]
+                {"Education", "Football", "Basketball", "Marketing", "Blockchain", "Programming", "Game Theory"};
+            if (!categoryRepository.Query().Any())
+            {
+                logger.LogWarning("Start Seeding Categories...");
+                foreach (var category in categories)
+                {
+                    await categoryRepository.AddAsync(new Category { Name = category });
+                }
+
+                await categoryRepository.SaveChangesAsync();
+
+                logger.LogWarning("End Seeding categories Successfully");
             }
         }
     }

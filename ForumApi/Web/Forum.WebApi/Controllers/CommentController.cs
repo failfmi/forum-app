@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Http;
 namespace Forum.WebApi.Controllers
 {
     [AllowAnonymous]
-    [Route("[api]/[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
     public class CommentController : BaseController
     {
         private ICommentService commentService;
@@ -27,7 +27,7 @@ namespace Forum.WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        [ProducesResponseType(typeof(ReturnMessage), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<object> Create([FromBody] CommentInputModel model)

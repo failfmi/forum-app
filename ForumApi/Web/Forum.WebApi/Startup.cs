@@ -8,6 +8,7 @@ using Forum.Data;
 using Forum.Data.Common;
 using Forum.Data.Common.Interfaces;
 using Forum.Data.DataTransferObjects;
+using Forum.Data.Models;
 using Forum.Data.Models.Users;
 using Forum.Services.Data;
 using Forum.Services.Data.Interfaces;
@@ -126,8 +127,9 @@ namespace Forum.WebApi
                 var accountService = serviceScope.ServiceProvider.GetService<IAccountService>();
                 var logger = serviceScope.ServiceProvider.GetService<ILogger<IDatabaseInitializer>>();
                 var userRepository = serviceScope.ServiceProvider.GetService<IRepository<User>>();
+                var categoryRepository = serviceScope.ServiceProvider.GetService<IRepository<Category>>();
 
-                new DatabaseInitiliazer().Seed(roleManager, userManager, Configuration, accountService, logger, userRepository).Wait();
+                new DatabaseInitiliazer().Seed(roleManager, userManager, Configuration, accountService, logger, userRepository, categoryRepository).Wait();
             }
 
             if (env.IsDevelopment())
