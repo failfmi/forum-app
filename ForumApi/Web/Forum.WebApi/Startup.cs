@@ -129,7 +129,7 @@ namespace Forum.WebApi
                 var userRepository = serviceScope.ServiceProvider.GetService<IRepository<User>>();
                 var categoryRepository = serviceScope.ServiceProvider.GetService<IRepository<Category>>();
 
-                new DatabaseInitiliazer().Seed(roleManager, userManager, Configuration, accountService, logger, userRepository, categoryRepository).Wait();
+                new DatabaseInitializer().Seed(roleManager, userManager, Configuration, accountService, logger, userRepository, categoryRepository).Wait();
             }
 
             if (env.IsDevelopment())

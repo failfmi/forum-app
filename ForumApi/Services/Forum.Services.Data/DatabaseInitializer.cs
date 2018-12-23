@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Forum.Services.Data
 {
-    public class DatabaseInitiliazer : IDatabaseInitializer
+    public class DatabaseInitializer : IDatabaseInitializer
     {
         public async Task Seed(RoleManager<IdentityRole> roleManager, UserManager<User> userManager,
             IConfiguration configuration, IAccountService accountService, ILogger<IDatabaseInitializer> logger, IRepository<User> userRepository, IRepository<Category> categoryRepository)
