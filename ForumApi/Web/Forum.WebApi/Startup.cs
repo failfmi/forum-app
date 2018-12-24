@@ -128,8 +128,9 @@ namespace Forum.WebApi
                 var logger = serviceScope.ServiceProvider.GetService<ILogger<IDatabaseInitializer>>();
                 var userRepository = serviceScope.ServiceProvider.GetService<IRepository<User>>();
                 var categoryRepository = serviceScope.ServiceProvider.GetService<IRepository<Category>>();
+                var postRepository = serviceScope.ServiceProvider.GetService<IRepository<Post>>();
 
-                new DatabaseInitializer().Seed(roleManager, userManager, Configuration, accountService, logger, userRepository, categoryRepository).Wait();
+                new DatabaseInitializer().Seed(roleManager, userManager, Configuration, accountService, logger, userRepository, categoryRepository, postRepository).Wait();
             }
 
             if (env.IsDevelopment())

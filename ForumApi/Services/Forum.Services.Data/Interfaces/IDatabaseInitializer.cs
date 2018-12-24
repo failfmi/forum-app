@@ -13,6 +13,6 @@ namespace Forum.Services.Data.Interfaces
 {
     public interface IDatabaseInitializer
     {
-        Task Seed(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IConfiguration configuration, IAccountService accountService, ILogger<IDatabaseInitializer> logger, IRepository<User> userRepository, IRepository<Category> categoryRepository);
+        Task Seed(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IConfiguration configuration, IAccountService accountService, ILogger<IDatabaseInitializer> logger, IRepository<User> userRepository, IRepository<Category> categoryRepository, IRepository<Post> postRepository);
     }
 }
