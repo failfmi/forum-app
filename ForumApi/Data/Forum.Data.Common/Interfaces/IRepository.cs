@@ -8,6 +8,8 @@ namespace Forum.Data.Common.Interfaces
     {
         IQueryable<T> Query();
 
+        T Find(object id);
+
         Task AddAsync(T entity);
 
         void Update(T entity);

@@ -22,6 +22,11 @@ namespace Forum.Data.Common
             return this.set;
         }
 
+        public T Find(object id)
+        {
+            return this.set.Find(id);
+        }
+
         public Task AddAsync(T entity)
         {
             return this.set.AddAsync(entity);

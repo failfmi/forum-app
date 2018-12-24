@@ -40,7 +40,7 @@ namespace Forum.WebApi.Controllers
                     var category = await this.categoryService.Create(model);
 
                     return this.Ok(new CreateEditReturnMessage<CategoryViewModel>
-                    { Message = "Category added successfully", Data = category });
+                    { Message = "Category created successfully", Data = category });
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ namespace Forum.WebApi.Controllers
 
 
         [Authorize]
-        [HttpPost]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -133,7 +133,7 @@ namespace Forum.WebApi.Controllers
             try
             {
                 var categories = this.categoryService.All();
-                return this.Ok(new CategoryAllReturn { Data = categories });
+                return this.Ok(categories);
             }
             catch (Exception e)
             {

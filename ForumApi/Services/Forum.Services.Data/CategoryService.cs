@@ -59,15 +59,17 @@ namespace Forum.Services.Data
             return this.Mapper.Map<Category, CategoryViewModel>(category);
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            //if (IsValidCategoryId(id))
-            //{
-            //    throw new Exception($"Category with id {id} does not exist.");
-            //}
+            if (IsValidCategoryId(id))
+            {
+                throw new Exception($"Category with id {id} does not exist.");
+            }
 
-            //this.categoryRepository.Delete(id);
-            throw new NotImplementedException();
+            var category = this.categoryRepository.Find(id);
+
+            this.categoryRepository.Delete(category);
+            await this.categoryRepository.SaveChangesAsync();
         }
 
         public CategoryViewModel GetById(int id)
