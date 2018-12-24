@@ -17,5 +17,7 @@ namespace Forum.Services.Data.Interfaces
         Task Delete(int id);
 
         ICollection<PostViewModel> All();
+
+        PostViewModel GetPostById(int id);
     }
 }

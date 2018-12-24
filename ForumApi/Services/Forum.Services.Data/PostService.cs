@@ -32,12 +32,12 @@ namespace Forum.Services.Data
 
         public async Task<PostViewModel> Create(PostInputModel model, string email)
         {
-            if (!this.IsValidPostTitle(model.Title))
+            if (this.IsValidPostTitle(model.Title))
             {
                 throw new ArgumentException($"Post with title '{model.Title}' already exists");
             }
 
-            if (!this.IsValidCategory(model.CategoryId))
+            if (this.IsValidCategory(model.CategoryId))
             {
                 throw new ArgumentException("The category provided for the creation of this post is not valid!");
             }
@@ -58,14 +58,19 @@ namespace Forum.Services.Data
 
         public async Task<PostViewModel> Edit(PostInputEditModel model, string email)
         {
-            if (!this.IsValidId(model.Id))
+            if (this.IsValidId(model.Id))
             {
                 throw new ArgumentException($"Post with id '{model.Id}' does not exist");
             }
 
+            if (this.IsValidCategory(model.CategoryId))
+            {
+                throw new ArgumentException("The category provided for the edit of this post is not valid!");
+            }
+
             var user = this.userRepository.Query().FirstOrDefault(u => u.Email == email);
 
-            var postOwner = this.postRepository.Query().FirstOrDefault(p => p.Id == model.Id)?.Author.Email;
+            var postOwner = this.postRepository.Query().AsNoTracking().FirstOrDefault(p => p.Id == model.Id)?.Author.Email;
             var isCallerAdmin = await this.UserManager.IsInRoleAsync(user, "Admin");
             if (postOwner != user?.Email || !isCallerAdmin)
             {
@@ -76,14 +81,22 @@ namespace Forum.Services.Data
 
             this.postRepository.Update(post);
 
-            post = this.postRepository.Query().Include(p => p.Category).FirstOrDefault(p => p.Id == post.Id);
+            post = this.postRepository.Query().Include(p => p.Comments).Include(p => p.Category).FirstOrDefault(p => p.Id == post.Id);
 
             return this.Mapper.Map<PostViewModel>(post);
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            if (this.IsValidId(id))
+            {
+                throw new ArgumentException($"Post with id '{id}' does not exist");
+            }
+
+            var post = this.postRepository.Find(id);
+
+            this.postRepository.Delete(post);
+            await this.postRepository.SaveChangesAsync();
         }
 
         public ICollection<PostViewModel> All()
@@ -98,19 +111,35 @@ namespace Forum.Services.Data
             return this.Mapper.Map<ICollection<PostViewModel>>(posts);
         }
 
+        public PostViewModel GetPostById(int id)
+        {
+            if (IsValidId(id))
+            {
+                throw new Exception($"Post with id {id} does not exist.");
+            }
+
+            var category = this.postRepository.Query()
+                .Include(p => p.Author)
+                .Include(p => p.Category)
+                .Include(p => p.Comments)
+                .FirstOrDefault(c => c.Id == id);
+
+            return this.Mapper.Map<PostViewModel>(category);
+        }
+
         private bool IsValidCategory(int id)
         {
-            return this.categoryRepository.Query().Count(c => c.Id == id) != 0;
+            return this.categoryRepository.Query().Count(c => c.Id == id) == 0;
         }
 
         private bool IsValidId(int id)
         {
-            return this.postRepository.Query().Count(p => p.Id == id) != 0;
+            return this.postRepository.Query().Count(p => p.Id == id) == 0;
         }
 
         private bool IsValidPostTitle(string title)
         {
-            return this.postRepository.Query().Count(p => p.Title.ToLower().Trim() == title.ToLower().Trim()) == 0;
+            return this.postRepository.Query().Count(p => p.Title.ToLower().Trim() == title.ToLower().Trim()) != 0;
         }
     }
 }
