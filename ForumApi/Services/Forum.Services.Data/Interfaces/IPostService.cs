@@ -12,9 +12,9 @@ namespace Forum.Services.Data.Interfaces
     {
         Task<PostViewModel> Create(PostInputModel model, string email);
 
-        Task<PostViewModel> Edit(PostInputEditModel model, string username);
+        Task<PostViewModel> Edit(PostInputEditModel model, string email);
 
-        Task Delete(int id);
+        Task Delete(int id, string email);
 
         ICollection<PostViewModel> All();
 

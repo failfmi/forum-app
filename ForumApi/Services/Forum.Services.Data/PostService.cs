@@ -22,7 +22,7 @@ namespace Forum.Services.Data
         private readonly IRepository<Post> postRepository;
         private readonly IRepository<Category> categoryRepository;
         private readonly IRepository<User> userRepository;
-        
+
         public PostService(IRepository<Post> postRepository, IRepository<Category> categoryRepository, IRepository<User> userRepository, UserManager<User> userManager, ILogger<BaseService> logger, IMapper mapper) : base(userManager, logger, mapper)
         {
             this.postRepository = postRepository;
@@ -70,30 +70,49 @@ namespace Forum.Services.Data
 
             var user = this.userRepository.Query().FirstOrDefault(u => u.Email == email);
 
-            var postOwner = this.postRepository.Query().AsNoTracking().FirstOrDefault(p => p.Id == model.Id)?.Author.Email;
+            var postOwner = this.postRepository
+                .Query()
+                .Include(p => p.Author)
+                .AsNoTracking()
+                .FirstOrDefault(p => p.Id == model.Id)
+                ?.Author.Email;
+
             var isCallerAdmin = await this.UserManager.IsInRoleAsync(user, "Admin");
-            if (postOwner != user?.Email || !isCallerAdmin)
+            if (postOwner != user?.Email && !isCallerAdmin)
             {
                 throw new UnauthorizedAccessException("You are not allowed for this operation.");
             }
 
             var post = this.Mapper.Map<Post>(model);
+            post.Author = user;
 
             this.postRepository.Update(post);
+            await this.postRepository.SaveChangesAsync();
 
             post = this.postRepository.Query().Include(p => p.Comments).Include(p => p.Category).FirstOrDefault(p => p.Id == post.Id);
 
             return this.Mapper.Map<PostViewModel>(post);
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int id, string email)
         {
             if (this.IsValidId(id))
             {
                 throw new ArgumentException($"Post with id '{id}' does not exist");
             }
 
-            var post = this.postRepository.Find(id);
+            var user = this.userRepository.Query().FirstOrDefault(u => u.Email == email);
+            var isCallerAdmin = await this.UserManager.IsInRoleAsync(user, "Admin");
+
+            var post = this.postRepository
+                .Query()
+                .Include(p => p.Author)
+                .First(p => p.Id == id);
+
+            if (post.Author.Email != user?.Email && !isCallerAdmin)
+            {
+                throw new UnauthorizedAccessException("You are not allowed for this operation.");
+            }
 
             this.postRepository.Delete(post);
             await this.postRepository.SaveChangesAsync();
