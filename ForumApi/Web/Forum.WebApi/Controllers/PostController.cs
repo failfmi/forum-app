@@ -37,7 +37,7 @@ namespace Forum.WebApi.Controllers
                 var post = await this.postService.Create(model, this.User.FindFirst(ClaimTypes.Email).Value);
 
                 return this.Ok(new CreateEditReturnMessage<PostViewModel>
-                { Message = "Post added successfully", Data = post });
+                { Message = "Post created successfully", Data = post });
             }
             catch (Exception e)
             {
@@ -61,17 +61,20 @@ namespace Forum.WebApi.Controllers
             {
                 var post = await this.postService.Edit(model, this.User.FindFirst(ClaimTypes.Email).Value);
                 return this.Ok(new CreateEditReturnMessage<PostViewModel>
-                    {Message = "Post edited successfully", Data = post});
+                { Message = "Post edited successfully", Data = post });
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return this.Unauthorized(new ReturnMessage { Message = e.Message });
             }
             catch (Exception e)
             {
-                // TODO: Return different statuses depending on exception
-                return this.BadRequest();
+                return this.BadRequest(new ReturnMessage { Message = e.Message });
             }
         }
 
         [Authorize]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
@@ -79,12 +82,50 @@ namespace Forum.WebApi.Controllers
         {
             try
             {
-                await this.postService.Delete(id);
-                return this.Ok(new ReturnMessage {Message = "Post deleted successfully!"});
+                await this.postService.Delete(id, this.User.FindFirst(ClaimTypes.Email).Value);
+                return this.Ok(new ReturnMessage { Message = "Post deleted successfully!" });
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return this.Unauthorized(new ReturnMessage { Message = e.Message });
             }
             catch (Exception e)
             {
-                return this.BadRequest(new ReturnMessage {Message = e.Message});
+                return this.BadRequest(new ReturnMessage { Message = e.Message });
+            }
+        }
+
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<object> Get(int id)
+        {
+            try
+            {
+                return this.Ok(this.postService.GetPostById(id));
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new ReturnMessage { Message = e.Message });
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<object> All()
+        {
+            try
+            {
+                var categories = this.postService.All();
+                return this.Ok(categories);
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new ReturnMessage { Message = e.Message });
             }
         }
     }

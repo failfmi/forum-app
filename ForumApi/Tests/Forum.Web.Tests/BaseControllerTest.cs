@@ -11,10 +11,12 @@ namespace Forum.Web.Tests
 {
     public abstract class BaseControllerTest : IClassFixture<TestingWebApplicationFactory>
     {
+        private const string LoginEndpoint = "api/account/login";
+        private const string RegisterEndpoint = "api/account/register";
+
         protected readonly TestingWebApplicationFactory factory;
         protected readonly HttpClient client;
-
-        private const string LoginEndpoint = "api/account/login";
+        protected const string ValidationMessage = "One or more validation errors occurred.";
 
         protected BaseControllerTest(TestingWebApplicationFactory factory)
         {
@@ -46,6 +48,26 @@ namespace Forum.Web.Tests
             response.EnsureSuccessStatusCode();
 
             return content.Token;
+        }
+
+        public async Task Register(string email, string password, string username)
+        {
+            var user = new RegisterUserInputModel
+            {
+                Email = email,
+                Password = password,
+                Username = username
+            };
+
+            var json = new StringContent(
+                JsonConvert.SerializeObject(user),
+                Encoding.UTF8,
+                "application/json");
+
+
+            var response = await client.PostAsync(RegisterEndpoint, json);
+
+            response.EnsureSuccessStatusCode();
         }
     }
 }

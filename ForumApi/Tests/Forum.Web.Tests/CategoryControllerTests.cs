@@ -15,7 +15,7 @@ namespace Forum.Web.Tests
     {
         private const string CategoryCreateEndpoint = "api/category/create";
         private const string CategoryEditEndpoint = "api/category/edit/";
-        private const string CategoryDeletePoint = "api/category/delete/";
+        private const string CategoryDeleteEndpoint = "api/category/delete/";
         private const string CategoryGetByIdEndpoint = "api/category/get/";
         private const string CategoryAllEndpoint = "api/category/all";
 
@@ -246,7 +246,7 @@ namespace Forum.Web.Tests
         [InlineData(2)]
         public async Task DeleteCategoryFailDueToUnauthorized(int id)
         {
-            var response = await this.client.DeleteAsync(CategoryDeletePoint + id);
+            var response = await this.client.DeleteAsync(CategoryDeleteEndpoint + id);
 
             var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
 
@@ -262,7 +262,7 @@ namespace Forum.Web.Tests
 
             this.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
-            var response = await this.client.DeleteAsync(CategoryDeletePoint + id);
+            var response = await this.client.DeleteAsync(CategoryDeleteEndpoint + id);
 
             var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
 
@@ -278,7 +278,7 @@ namespace Forum.Web.Tests
 
             this.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
-            var response = await this.client.DeleteAsync(CategoryDeletePoint + id);
+            var response = await this.client.DeleteAsync(CategoryDeleteEndpoint + id);
 
             var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
 
