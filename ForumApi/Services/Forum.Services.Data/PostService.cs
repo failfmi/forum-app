@@ -70,21 +70,20 @@ namespace Forum.Services.Data
 
             var user = this.userRepository.Query().FirstOrDefault(u => u.Email == email);
 
-            var postOwner = this.postRepository
+            var postDb = this.postRepository
                 .Query()
                 .Include(p => p.Author)
                 .AsNoTracking()
-                .FirstOrDefault(p => p.Id == model.Id)
-                ?.Author.Email;
+                .FirstOrDefault(p => p.Id == model.Id);
 
             var isCallerAdmin = await this.UserManager.IsInRoleAsync(user, "Admin");
-            if (postOwner != user?.Email && !isCallerAdmin)
+            if (postDb?.Author.Email != user?.Email && !isCallerAdmin)
             {
                 throw new UnauthorizedAccessException("You are not allowed for this operation.");
             }
 
             var post = this.Mapper.Map<Post>(model);
-            post.Author = user;
+            post.AuthorId = postDb?.AuthorId;
 
             this.postRepository.Update(post);
             await this.postRepository.SaveChangesAsync();

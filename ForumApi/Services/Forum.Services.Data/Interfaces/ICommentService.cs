@@ -11,9 +11,9 @@ namespace Forum.Services.Data.Interfaces
     {
         Task<CommentViewModel> Create(CommentInputModel model, string username);
 
-        Task<CommentViewModel> Edit(CommentViewModel model);
+        Task<CommentViewModel> Edit(CommentInputEditModel model, string username);
 
-        Task Delete(int id);
+        Task Delete(int id, string username);
 
         ICollection<CommentViewModel> GetCommentsByUsername(string username);
     }
