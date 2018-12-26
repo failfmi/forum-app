@@ -83,6 +83,7 @@ namespace Forum.Services.Data
             }
 
             var post = this.Mapper.Map<Post>(model);
+            post.CreationDate = DateTime.UtcNow;
             post.AuthorId = postDb?.AuthorId;
 
             this.postRepository.Update(post);
@@ -124,6 +125,7 @@ namespace Forum.Services.Data
                 .Include(p => p.Author)
                 .Include(p => p.Category)
                 .Include(p => p.Comments)
+                .ThenInclude(c => c.Author)
                 .ToList();
 
             return this.Mapper.Map<ICollection<PostViewModel>>(posts);

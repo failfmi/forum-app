@@ -149,10 +149,10 @@ namespace Forum.WebApi
             }
 
             app.UseCors(builder => builder
-                .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .AllowCredentials());
+                .AllowCredentials()
+                .WithOrigins("http://localhost:4200"));
 
             app.UseHttpsRedirection();
             app.UseMvc();
