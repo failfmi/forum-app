@@ -92,6 +92,7 @@ namespace Forum.WebApi
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IExternalAccountService, ExternalAccountService>();
             services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddIdentity<User, IdentityRole>(options =>
                 {

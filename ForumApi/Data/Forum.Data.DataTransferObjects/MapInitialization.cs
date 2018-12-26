@@ -9,6 +9,7 @@ using Forum.Data.DataTransferObjects.InputModels.User;
 using Forum.Data.DataTransferObjects.ViewModels.Category;
 using Forum.Data.DataTransferObjects.ViewModels.Comment;
 using Forum.Data.DataTransferObjects.ViewModels.Post;
+using Forum.Data.DataTransferObjects.ViewModels.User;
 using Forum.Data.Models;
 using Forum.Data.Models.Users;
 
@@ -34,6 +35,8 @@ namespace Forum.Data.DataTransferObjects
 
             this.CreateMap<RegisterUserInputModel, User>();
 
+            this.CreateMap<User, UserViewModel>()
+                .ForMember(uvm => uvm.IsBanned, conf => conf.MapFrom(u => !u.IsActive));
         }
     }
 }
