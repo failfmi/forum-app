@@ -1,5 +1,5 @@
 export class CategoryEditModel {
-  public _id: string;
+  public id: string;
   public name: string;
   public creationDate: Date;
 

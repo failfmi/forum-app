@@ -29,7 +29,7 @@
             <td>{{c.name}}</td>
             <td>{{c.creationDate.toLocaleString()}}</td>
             <td><div>
-              <button class="margin" mdbBtn type="button" color="danger" mdbWavesEffect size="sm" (click)="deleteCategory(c._id)">Delete</button>
+              <button class="margin" mdbBtn type="button" color="danger" mdbWavesEffect size="sm" (click)="deleteCategory(c.id)">Delete</button>
               <button mdbBtn type="button" color="warning" mdbWavesEffect size="sm" (click)="openEditCategoryDialog(c)">Edit</button>
             </div></td>
         </tr>

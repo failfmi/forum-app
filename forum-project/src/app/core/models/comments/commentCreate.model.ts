@@ -1,5 +1,5 @@
 export class CommentCreateModel {
   public text: string;
-  public creator: string;
+  public author: string;
   public postId: string;
 }

@@ -26,7 +26,7 @@ export class CommentEditComponent {
 
   editComment() {
     this.data.comment.text = this.editForm.value.text;
-    this.commentService.editComment(this.data.comment._id, this.data.comment);
+    this.commentService.editComment(this.data.comment.id, this.data.comment);
     this.onNoClick();
   }
 }

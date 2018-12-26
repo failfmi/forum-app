@@ -9,10 +9,10 @@ import { PostModel } from '../../models/posts/post.model';
 import { ResponseModel } from '../../models/response.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 
-const allPostsUrl = 'https://localhost:5000/post/all';
-const createPostUrl = 'https://localhost:5000/post/create';
-const editPostUrl = 'https://localhost:5000/post/edit/';
-const deletePostUrl = 'http://localhost:5000/post/delete/';
+const allPostsUrl = 'https://localhost:5001/api/post/all';
+const createPostUrl = 'https://localhost:5001/api/post/create';
+const editPostUrl = 'https://localhost:5001/api/post/edit/';
+const deletePostUrl = 'https://localhost:5001/api/post/delete/';
 const cacheTime = 120000; // 2minutes
 
 @Injectable()
@@ -57,7 +57,7 @@ export class PostsService {
   }
 
   editPost(id: string, model: PostModel) {
-    this.http.post(editPostUrl + id, model)
+    this.http.put(editPostUrl + id, model)
       .subscribe((editCat: ResponseModel) => {
         this.store.dispatch(new Edit(editCat.data));
         this.toastr.info(editCat.message);

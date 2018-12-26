@@ -30,7 +30,7 @@ export class CommentCreateComponent extends BaseComponent implements OnInit {
         .pipe(select(st => st.posts.all))
         .subscribe(posts => {
           if (posts.length > 0) {
-            const post = posts.find(p => p._id === this.postId);
+            const post = posts.find(p => Number(p.id) === Number(this.postId));
             if (!post) {
               this.router.navigate(['/home']);
             }
@@ -52,9 +52,9 @@ export class CommentCreateComponent extends BaseComponent implements OnInit {
 
   createComment() {
     const form = this.createForm.value;
-    form.creatorName = this.authService.userName;
-    form.postId = this.post._id;
+    form.author = this.authService.userName;
+    form.postId = this.post.id;
 
-    this.commentService.createComment(this.post._id, form);
+    this.commentService.createComment(this.post.id, form);
   }
 }

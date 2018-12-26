@@ -29,7 +29,9 @@
         </mdb-carousel>
         <!--/.Carousel Wrapper-->
         </div>
-        <app-category-list [leftCatSet]="leftCatSet" [rightCatSet]="rightCatSet"></app-category-list>
+        <div class="col-md-4">
+            <app-category-list [leftCatSet]="leftCatSet" [rightCatSet]="rightCatSet"></app-category-list>
+        </div>
     </div>
     <app-posts-list [posts]="posts"></app-posts-list>
 </div>

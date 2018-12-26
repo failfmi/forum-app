@@ -14,7 +14,7 @@ export class AdminEditCategoryComponent {
   constructor(public dialogRef: MatDialogRef<AdminEditCategoryComponent>,
     @Inject(MAT_DIALOG_DATA) public data, protected fb: FormBuilder, private categoryService: CategoriesService) {
       this.editForm = this.fb.group({
-        _id: [data.category._id],
+        id: [data.category.id],
         name: [data.category.name, [Validators.required, Validators.minLength(3)]]
       });
     }
@@ -27,7 +27,7 @@ export class AdminEditCategoryComponent {
 
   editCategory() {
     const form = this.editForm.value;
-    this.categoryService.editCategory(form._id, form);
+    this.categoryService.editCategory(form.id, form);
     this.onNoClick();
   }
 }

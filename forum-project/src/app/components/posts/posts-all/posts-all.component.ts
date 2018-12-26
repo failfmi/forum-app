@@ -39,8 +39,8 @@ export class PostsAllComponent implements OnDestroy {
             .sort((a: PostModel, b: PostModel) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime());
         this.posts.forEach(a => a.creationDate = new Date(a.creationDate));
         this.postsToShow = this.posts;
-        if (state.categories.selected.hasOwnProperty('_id')) {
-          this.postsToShow = this.posts.filter(p => p.category._id === state.categories.selected._id);
+        if (state.categories.selected.hasOwnProperty('id')) {
+          this.postsToShow = this.posts.filter(p => p.category.id === state.categories.selected.id);
           this.selectedCategory = state.categories.selected.name;
         } else {
           this.postsToShow = this.posts;

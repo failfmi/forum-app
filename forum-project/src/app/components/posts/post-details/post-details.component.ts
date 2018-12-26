@@ -31,7 +31,7 @@ export class PostDetailsComponent extends BaseComponent {
       .pipe(select(st => st.posts.all))
       .subscribe(posts => {
         if (posts.length > 0) {
-          this.post = posts.find(p => p._id === this.postId);
+          this.post = posts.find(p => Number(p.id) === Number(this.postId));
           if (this.post) {
             this.post.creationDate = new Date(this.post.creationDate);
             this.post.comments.forEach(c => c.creationDate = new Date(c.creationDate));
@@ -44,17 +44,17 @@ export class PostDetailsComponent extends BaseComponent {
    }
 
   sameAuthor(): boolean {
-    return this.authService.userName === this.post.authorName;
+    return this.authService.userName === this.post.author;
   }
 
   delete(): void {
-    this.postService.deletePost(this.post._id);
+    this.postService.deletePost(this.post.id);
   }
 
   deleteComment(id: string) {
     console.log(id);
-    console.log(this.post._id);
-    this.commentService.deleteComment(id, this.post._id);
+    console.log(this.post.id);
+    this.commentService.deleteComment(id, this.post.id);
   }
 
   openEditCommentDialog (comment): void {

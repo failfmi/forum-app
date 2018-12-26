@@ -33,20 +33,19 @@ export class PostEditComponent extends BaseComponent {
       });
       this.subscriptionPost$ = this.store.pipe(select(st => st.posts.all))
         .subscribe(posts => {
-          this.post = posts.find(p => p._id === this.postId);
+          this.post = posts.find(p => Number(p.id) === Number(this.postId));
           if (!this.post) {
             this.router.navigate(['/404']);
             return;
           }
-          if (!this.authService.isAdmin() && this.post.authorName !== this.authService.userName) {
+          if (!this.authService.isAdmin() && this.post.author !== this.authService.userName) {
             this.router.navigate(['/posts']);
             return;
           }
           this.editForm = this.fb.group({
             category: [this.post.category.name, [Validators.required]],
             title: [this.post.title, [Validators.required, Validators.minLength(6)]],
-            body: [this.post.body, [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
-            authorName: [this.post.authorName]
+            body: [this.post.body, [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
           });
 
           console.log(this.editForm);
@@ -64,6 +63,9 @@ export class PostEditComponent extends BaseComponent {
 
   editPost() {
     const form = this.editForm.value;
+
+    form.categoryId = this.categories.find(c => c.name === form.category).id;
+    form.id = this.postId;
     this.postService.editPost(this.postId, form);
   }
 }

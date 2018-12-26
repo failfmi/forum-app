@@ -23,7 +23,7 @@ function addPost(state: PostState, post: PostModel) {
 
 function editPost(state: PostState, post: PostModel) {
   const copyCats = state.all.slice();
-  const postToEdit = copyCats.find(p => p._id === post._id);
+  const postToEdit = copyCats.find(p => p.id === post.id);
   postToEdit.title = post.title;
   postToEdit.body = post.body;
   postToEdit.author = post.author;
@@ -38,7 +38,7 @@ function editPost(state: PostState, post: PostModel) {
 
 function addComment(state: PostState, comment: CommentModel) {
   const copyCats = state.all.slice();
-  const postToEdit = copyCats.find(p => p._id === comment.postId);
+  const postToEdit = copyCats.find(p => p.id === comment.postId);
   postToEdit.comments.push(comment);
 
   return Object.assign({}, state, {
@@ -48,10 +48,10 @@ function addComment(state: PostState, comment: CommentModel) {
 
 function editComment(state: PostState, comment: CommentModel) {
   const copyCats = state.all.slice();
-  const postToEdit = copyCats.find(p => p._id === comment.postId);
-  const commentToEdit = postToEdit.comments.find(c => c._id === comment._id);
+  const postToEdit = copyCats.find(p => p.id === comment.postId);
+  const commentToEdit = postToEdit.comments.find(c => c.id === comment.id);
   commentToEdit.creationDate = comment.creationDate;
-  commentToEdit.creator = comment.creator;
+  commentToEdit.author = comment.author;
   commentToEdit.text = comment.text;
 
   return Object.assign({}, state, {
@@ -61,15 +61,15 @@ function editComment(state: PostState, comment: CommentModel) {
 
 function deleteComment(state: PostState, id: string, postId: string) {
   const copyCats = state.all.slice();
-  const postToEdit = copyCats.find(p => p._id === postId);
-  postToEdit.comments = postToEdit.comments.filter(c => c._id !== id);
+  const postToEdit = copyCats.find(p => p.id === postId);
+  postToEdit.comments = postToEdit.comments.filter(c => c.id !== id);
   return Object.assign({}, state, {
     all: copyCats
   });
 }
 
 function deletePost(state: PostState, id: string) {
-  return Object.assign({}, state, {all: state.all.filter(c => c._id !== id)});
+  return Object.assign({}, state, {all: state.all.filter(c => c.id !== id)});
 }
 
 export function postReducer (

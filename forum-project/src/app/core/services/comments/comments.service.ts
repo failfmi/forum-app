@@ -7,9 +7,9 @@ import { Store, select } from '@ngrx/store';
 import { AddComment, EditComment, DeleteComment } from '../../store/posts/post.actions';
 import { ResponseModel } from '../../models/response.model';
 
-const createCommentUrl = 'http://localhost:5000/comment/create';
-const editCommentUrl = 'http://localhost:5000/comment/edit/';
-const deleteCommentUrl = 'http://localhost:5000/comment/delete/';
+const createCommentUrl = 'https://localhost:5001/api/comment/create';
+const editCommentUrl = 'https://localhost:5001/api/comment/edit/';
+const deleteCommentUrl = 'https://localhost:5001/api/comment/delete/';
 
 @Injectable()
 export class CommentsService {
@@ -30,7 +30,7 @@ export class CommentsService {
   }
 
   editComment(id: string, model) {
-    this.http.post(editCommentUrl + id, model)
+    this.http.put(editCommentUrl + id, model)
       .subscribe((editCat: ResponseModel) => {
         this.store.dispatch(new EditComment(editCat.data));
         this.toastr.info(editCat.message);
@@ -50,7 +50,7 @@ export class CommentsService {
       .pipe(select(st => st.posts.all))
       .subscribe(posts => {
         if (posts.length > 0) {
-          const post = posts.find(p => p._id === id);
+          const post = posts.find(p => p.id === id);
           if (!post) {
             return false;
           }

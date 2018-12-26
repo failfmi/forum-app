@@ -2,10 +2,10 @@ import { CategoryEditModel } from '../category/categoryEdit.model';
 
 export class PostAllModel {
   constructor(
-    public _id: string,
+    public id: string,
     public title: string,
     public body: string,
-    public authorName: string,
+    public author: string,
     public category,
     public creationDate: Date) { }
 }

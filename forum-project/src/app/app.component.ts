@@ -20,12 +20,12 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.postService.getAllPosts();
-    // this.categoryService.getAllCategories();
-    // this.store
-    //   .pipe(select(st => st.posts.postsRequestMade), delay(0))
-    //   .subscribe(made => {
-    //     this.postsRequestFinished = made;
-    //   });
+    this.postService.getAllPosts();
+    this.categoryService.getAllCategories();
+    this.store
+      .pipe(select(st => st.posts.postsRequestMade), delay(0))
+      .subscribe(made => {
+        this.postsRequestFinished = made;
+      });
   }
 }

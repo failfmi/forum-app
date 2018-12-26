@@ -15,7 +15,7 @@ function getAllUsers(state, allUsers) {
 
 function banUser(state: UserState, payload) {
   const copyUsers = state.all.slice();
-  const user = copyUsers.find(u => u._id === payload._id);
+  const user = copyUsers.find(u => u.id === payload.id);
   user.isBanned = payload.isBanned;
   return Object.assign({}, state, {
     all: copyUsers
@@ -24,7 +24,7 @@ function banUser(state: UserState, payload) {
 
 function unbanUser(state: UserState, payload) {
   const copyUsers = state.all.slice();
-  const user = copyUsers.find(u => u._id === payload._id);
+  const user = copyUsers.find(u => u.id === payload.id);
   user.isBanned = payload.isBanned;
   return Object.assign({}, state, {
     all: copyUsers

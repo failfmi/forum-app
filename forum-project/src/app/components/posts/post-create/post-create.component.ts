@@ -42,7 +42,8 @@ export class PostsCreateComponent extends BaseComponent implements OnInit {
 
   createPost() {
     const form = this.createForm.value;
-    form.authorName = this.authService.userName;
+    form.categoryId = this.categories.find(c => c.name === form.category).id;
+
     this.postService.addPost(form);
   }
 

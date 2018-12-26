@@ -61,7 +61,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
           .sort((a: PostModel, b: PostModel) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime())
           .slice(0, 6);
         for (const i of postsS) {
-          const obj = new PostHomeModel(i._id, i.title, i.body, new Date(i.creationDate), i.category.name);
+          const obj = new PostHomeModel(i.id, i.title, i.body, new Date(i.creationDate), i.category.name);
           this.posts.push(obj);
         }
       });

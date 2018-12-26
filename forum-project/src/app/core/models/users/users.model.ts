@@ -1,5 +1,5 @@
 export class UserModel {
-  public _id: string;
+  public id: string;
   public username: string;
   public email: string;
   public dateRegistered: Date;

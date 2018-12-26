@@ -9,10 +9,10 @@ import { GetAllCategories, Add, Edit, Delete } from '../../store/categories/cate
 import { CategoryModel } from '../../models/category/category.model';
 import { ResponseModel } from '../../models/response.model';
 
-const allCategoriesUrl = 'http://localhost:5000/category/all';
-const createCategoryUrl = 'http://localhost:5000/category/create';
-const editCategoryUrl = 'http://localhost:5000/category/edit/';
-const deleteCategoryUrl = 'http://localhost:5000/category/delete/';
+const allCategoriesUrl = 'https://localhost:5001/api/category/all';
+const createCategoryUrl = 'https://localhost:5001/api/category/create';
+const editCategoryUrl = 'https://localhost:5001/api/category/edit/';
+const deleteCategoryUrl = 'https://localhost:5001/api/category/delete/';
 const cacheTime = 600000; // 10minutes
 
 @Injectable()
@@ -51,7 +51,7 @@ export class CategoriesService {
   }
 
   editCategory(id: string, model: CategoryEditModel) {
-    this.http.post(editCategoryUrl + id, model)
+    this.http.put(editCategoryUrl + id, model)
       .subscribe((editCat: ResponseModel) => {
         this.store.dispatch(new Edit(editCat.data));
         this.toastr.info(editCat.message);

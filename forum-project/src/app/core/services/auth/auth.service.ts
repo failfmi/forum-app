@@ -39,7 +39,8 @@ export class AuthService {
         const token = this.cookieService.get('token');
         try {
           const decodedToken = jwt_decode(token);
-          const data = new AuthModel(token, decodedToken.username, decodedToken.email, true, decodedToken.isAdmin, decodedToken.isBanned);
+          const data = new AuthModel(token, decodedToken.unique_name,
+            decodedToken.email, true, decodedToken.isAdmin, decodedToken.isBanned);
           this.store.dispatch(new Auth(data));
         } catch (err) {
           this.toastr.error('Invalid Token');

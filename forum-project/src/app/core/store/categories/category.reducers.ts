@@ -26,7 +26,7 @@ function editCategory(state: CategoryState, category: CategoryEditModel) {
     return state;
   }
   const copyCats = state.all.slice();
-  const categoryToEdit = copyCats.find(c => c._id === category._id);
+  const categoryToEdit = copyCats.find(c => c.id === category.id);
   categoryToEdit.name = category.name;
   categoryToEdit.creationDate = category.creationDate;
 
@@ -36,7 +36,7 @@ function editCategory(state: CategoryState, category: CategoryEditModel) {
 }
 
 function deleteCategory(state: CategoryState, id: string) {
-  return Object.assign({}, state, {all: state.all.filter(c => c._id !== id)});
+  return Object.assign({}, state, {all: state.all.filter(c => c.id !== id)});
 }
 
 function selectCategory(state: CategoryState, payload: CategoryEditModel) {
