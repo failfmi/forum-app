@@ -25,7 +25,7 @@ namespace Forum.WebApi.Middleware
         public async Task Invoke(HttpContext context, IServiceProvider provider)
         {
             var userManager = provider.GetService<UserManager<User>>();
-            var returnMessage = new ReturnMessage { Message = "You are not authorized." };
+            var returnMessage = new ReturnMessage { Message = "You are not authorized! Contact admin for further information.", Status = StatusCodes.Status401Unauthorized};
             var serialized = JsonConvert.SerializeObject(returnMessage);
 
             if (AvailableMethods.Contains(context.Request.Method.ToUpper()))
@@ -45,7 +45,6 @@ namespace Forum.WebApi.Middleware
                             await context.Response.WriteAsync(serialized);
                             return;
                         }
-                        await this.next.Invoke(context);
                     }
                     catch (Exception e)
                     {
@@ -53,6 +52,11 @@ namespace Forum.WebApi.Middleware
                         await context.Response.WriteAsync(serialized);
                         return;
                     }
+                    await this.next.Invoke(context);
+                }
+                else
+                {
+                    await this.next.Invoke(context);
                 }
             }
             else

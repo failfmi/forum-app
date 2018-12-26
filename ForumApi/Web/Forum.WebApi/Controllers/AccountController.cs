@@ -57,7 +57,7 @@ namespace Forum.WebApi.Controllers
             }
             catch (UnauthorizedAccessException e)
             {
-                return this.BadRequest(new ReturnMessage { Message = e.Message});
+                return this.Unauthorized(new ReturnMessage { Message = e.Message});
             }
             catch (Exception e)
             {
