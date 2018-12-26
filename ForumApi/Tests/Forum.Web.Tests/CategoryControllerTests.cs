@@ -13,11 +13,13 @@ namespace Forum.Web.Tests
 {
     public class CategoryControllerTests : BaseControllerTest
     {
-        private const string CategoryCreateEndpoint = "api/category/create";
-        private const string CategoryEditEndpoint = "api/category/edit/";
-        private const string CategoryDeleteEndpoint = "api/category/delete/";
+        private const string CategoryCreateEndpoint = "api/admin/category/create";
+        private const string CategoryEditEndpoint = "api/admin/category/edit/";
+        private const string CategoryDeleteEndpoint = "api/admin/category/delete/";
         private const string CategoryGetByIdEndpoint = "api/category/get/";
         private const string CategoryAllEndpoint = "api/category/all";
+
+        private const string UnauthorizedError = "You are unauthorized!";
 
         public CategoryControllerTests(TestingWebApplicationFactory factory) : base(factory)
         {
@@ -94,9 +96,34 @@ namespace Forum.Web.Tests
 
             var response = await this.client.PostAsync(CategoryCreateEndpoint, json);
 
+            Assert.Equal(StatusCodes.Status401Unauthorized, (int)response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("test@test.com", "12341234", "test", "Baseball")]
+        public async Task CreateCategoryFailDueToUnauthorizedToken(string email, string password, string username, string categoryName)
+        {
+            await this.Register(email, password, username);
+            var token = await this.Login(email, password);
+
+            this.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+            var category = new CategoryInputModel
+            {
+                Name = categoryName
+            };
+
+            var json = new StringContent(
+                JsonConvert.SerializeObject(category),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await this.client.PostAsync(CategoryCreateEndpoint, json);
+
             var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
 
             Assert.Equal(StatusCodes.Status401Unauthorized, content.Status);
+            Assert.Equal(UnauthorizedError, content.Message);
         }
 
         [Theory]
@@ -146,9 +173,36 @@ namespace Forum.Web.Tests
 
             var response = await this.client.PutAsync(CategoryEditEndpoint + id, json);
 
+            Assert.Equal(StatusCodes.Status401Unauthorized, (int)response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("test@test.com", "12341234", "test", 1, "Education2")]
+        [InlineData("test@test.com", "12341234", "test", 2, "Test")]
+        public async Task EditCategoryFailDueToUnauthorizedToken(string email, string password, string username, int id, string categoryName)
+        {
+            await this.Register(email, password, username);
+            var token = await this.Login(email, password);
+
+            this.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+            var category = new CategoryInputEditModel
+            {
+                Id = id,
+                Name = categoryName
+            };
+
+            var json = new StringContent(
+                JsonConvert.SerializeObject(category),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await this.client.PutAsync(CategoryEditEndpoint + id, json);
+
             var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
 
             Assert.Equal(StatusCodes.Status401Unauthorized, content.Status);
+            Assert.Equal(UnauthorizedError, content.Message);
         }
 
         [Theory]
@@ -242,15 +296,31 @@ namespace Forum.Web.Tests
         }
 
         [Theory]
+        [InlineData("test@test.com", "12341234", "test", 1)]
+        [InlineData("test@test.com", "12341234", "test", 2)]
+        public async Task DeleteCategoryFailDueToUnauthorizedToken(string email, string password, string username, int id)
+        {
+            await this.Register(email, password, username);
+            var token = await this.Login(email, password);
+
+            this.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+            var response = await this.client.DeleteAsync(CategoryDeleteEndpoint + id);
+
+            var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
+
+            Assert.Equal(StatusCodes.Status401Unauthorized, content.Status);
+            Assert.Equal(UnauthorizedError, content.Message);
+        }
+
+        [Theory]
         [InlineData(1)]
         [InlineData(2)]
         public async Task DeleteCategoryFailDueToUnauthorized(int id)
         {
             var response = await this.client.DeleteAsync(CategoryDeleteEndpoint + id);
 
-            var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
-
-            Assert.Equal(StatusCodes.Status401Unauthorized, content.Status);
+            Assert.Equal(StatusCodes.Status401Unauthorized, (int)response.StatusCode);
         }
 
         [Theory]
