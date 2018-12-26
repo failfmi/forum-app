@@ -21,6 +21,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         switch (err.status) {
           case 400:
             this.spinner.hide();
+            debugger;
             if (err.error.errors) {
               const message = Object.keys(err.error.errors)
               .map(e => err.error.errors[e])
@@ -31,6 +32,10 @@ export class ErrorInterceptor implements HttpInterceptor {
             }
             break;
           case 401:
+            console.log(err.error);
+            console.log(err.error.Message);
+            console.log(err.error.message);
+            debugger;
             this.spinner.hide();
             this.toastr.error(err.error.message, 'Warning!');
             break;

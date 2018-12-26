@@ -21,13 +21,11 @@
         <tr>
           <th>Category Name</th>
           <th>Date of publication</th>
-          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr [@cats] *ngFor="let c of categories | paginate: { id: 'allCats', itemsPerPage: pageSize, currentPage: currentPage}">
             <td>{{c.name}}</td>
-            <td>{{c.creationDate.toLocaleString()}}</td>
             <td><div>
               <button class="margin" mdbBtn type="button" color="danger" mdbWavesEffect size="sm" (click)="deleteCategory(c.id)">Delete</button>
               <button mdbBtn type="button" color="warning" mdbWavesEffect size="sm" (click)="openEditCategoryDialog(c)">Edit</button>

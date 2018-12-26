@@ -28,7 +28,6 @@ function editCategory(state: CategoryState, category: CategoryEditModel) {
   const copyCats = state.all.slice();
   const categoryToEdit = copyCats.find(c => c.id === category.id);
   categoryToEdit.name = category.name;
-  categoryToEdit.creationDate = category.creationDate;
 
   return Object.assign({}, state, {
     all: copyCats
