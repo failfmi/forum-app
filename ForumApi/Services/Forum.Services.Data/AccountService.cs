@@ -84,6 +84,11 @@ namespace Forum.Services.Data
                 throw new Exception("Invalid username or password!");
             }
 
+            if (user.IsActive == false)
+            {
+                throw new UnauthorizedAccessException("You are banned! Contact admin for further information.");
+            }
+
             var result = await this.signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
             if (!result.Succeeded)

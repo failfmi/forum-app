@@ -14,6 +14,7 @@ using Forum.Services.Data;
 using Forum.Services.Data.Interfaces;
 using Forum.Services.Data.Utils;
 using Forum.WebApi.Middleware;
+using Forum.WebApi.Middleware.Extensions;
 using Forum.WebApi.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -148,11 +149,14 @@ namespace Forum.WebApi
                 app.UseMiddleware<FakeRemoteIpAddressMiddleware>();
             }
 
+
             app.UseCors(builder => builder
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
                 .WithOrigins("http://localhost:4200"));
+
+            app.UseRequestMiddleware();
 
             app.UseHttpsRedirection();
             app.UseMvc();

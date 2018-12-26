@@ -55,6 +55,10 @@ namespace Forum.WebApi.Controllers
                 var token = await this.accountService.Login(model);
                 return this.Ok(new LoginViewModel {Message = "You have successfully logged in!", Token = token});
             }
+            catch (UnauthorizedAccessException e)
+            {
+                return this.BadRequest(new ReturnMessage { Message = e.Message});
+            }
             catch (Exception e)
             {
                 return this.BadRequest(new ReturnMessage {Message = "Invalid e-mail or password!"});
