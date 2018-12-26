@@ -32,12 +32,13 @@ export class ErrorInterceptor implements HttpInterceptor {
             }
             break;
           case 401:
-            console.log(err.error);
-            console.log(err.error.Message);
-            console.log(err.error.message);
-            debugger;
             this.spinner.hide();
-            this.toastr.error(err.error.message, 'Warning!');
+            if (err.error.Message) {
+              this.toastr.error(err.error.Message, 'Warning!');
+
+            } else {
+              this.toastr.error(err.error.message, 'Warning!');
+            }
             break;
         }
 

@@ -7,9 +7,9 @@ import { UserModel } from '../../models/users/users.model';
 import { GetAllUsers, Ban, Unban } from '../../store/users/users.actions';
 import { ResponseModel } from '../../models/response.model';
 
-const allUsersUrl = 'http://localhost:5000/users/all';
-const banUserUrl = 'http://localhost:5000/users/ban';
-const unbanUserUrl = 'http://localhost:5000/users/unban';
+const allUsersUrl = 'https://localhost:5001/api/admin/all';
+const banUserUrl = 'https://localhost:5001/api/admin/ban/';
+const unbanUserUrl = 'https://localhost:5001/api/admin/unban/';
 
 @Injectable()
 export class AdminService {
@@ -28,7 +28,7 @@ export class AdminService {
   }
 
   banUser(userId) {
-    this.http.post(banUserUrl, {user: userId})
+    this.http.post(banUserUrl + userId, {})
       .subscribe((newCat: ResponseModel) => {
         this.store.dispatch(new Ban(newCat.data));
         this.toastr.success(newCat.message);
@@ -36,7 +36,7 @@ export class AdminService {
   }
 
   unbanUser(userId) {
-    this.http.post(unbanUserUrl, {user: userId})
+    this.http.post(unbanUserUrl + userId, {})
       .subscribe((newCat: ResponseModel) => {
         this.store.dispatch(new Unban(newCat.data));
         this.toastr.success(newCat.message);

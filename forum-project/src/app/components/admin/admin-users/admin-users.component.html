@@ -16,7 +16,7 @@
             <td>{{u.username}}</td>
             <td>{{u.email}}</td>
             <td>{{u.dateRegistered.toLocaleString()}}</td>
-            <td>{{u.roles.length > 0 ? true : false }}</td>
+            <td>{{u.isAdmin}}</td>
             <td>{{u.isBanned}}</td>
             <td><span *ngIf="!u.isBanned"><button mat-raised-button (click)="banUser(u.id)">Ban</button></span>
             <span *ngIf="u.isBanned"><button mat-flat-button (click)="unbanUser(u.id)">Unban</button></span></td>

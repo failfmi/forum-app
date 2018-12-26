@@ -37,14 +37,18 @@ export class LoginComponent extends BaseComponent {
   login(): void {
     const form = this.loginForm.value;
     this.authService.login(new LoginModel(form.email, form.password))
-      .subscribe(() => this.onNoClick());
+      .subscribe(() => this.onNoClick(), (error) => {
+        this.onNoClick();
+      });
   }
 
   externalLogin(): void {
     this.externalAuthService.signIn(FacebookLoginProvider.PROVIDER_ID)
       .then(result => {
         this.authService.loginFacebook(new FacebookModel(result.authToken))
-          .subscribe(() => this.onNoClick());
+          .subscribe(() => this.onNoClick(), (error) => {
+            this.onNoClick();
+          });
       });
   }
 }

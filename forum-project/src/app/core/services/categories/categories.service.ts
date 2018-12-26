@@ -10,9 +10,9 @@ import { CategoryModel } from '../../models/category/category.model';
 import { ResponseModel } from '../../models/response.model';
 
 const allCategoriesUrl = 'https://localhost:5001/api/category/all';
-const createCategoryUrl = 'https://localhost:5001/api/category/create';
-const editCategoryUrl = 'https://localhost:5001/api/category/edit/';
-const deleteCategoryUrl = 'https://localhost:5001/api/category/delete/';
+const createCategoryUrl = 'https://localhost:5001/api/admin/category/create';
+const editCategoryUrl = 'https://localhost:5001/api/admin/category/edit/';
+const deleteCategoryUrl = 'https://localhost:5001/api/admin/category/delete/';
 const cacheTime = 600000; // 10minutes
 
 @Injectable()

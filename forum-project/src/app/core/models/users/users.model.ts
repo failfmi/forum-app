@@ -3,6 +3,6 @@ export class UserModel {
   public username: string;
   public email: string;
   public dateRegistered: Date;
-  public roles: Array<any>;
+  public isAdmin: boolean;
   public isBanned: boolean;
 }
