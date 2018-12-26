@@ -1,4 +1,5 @@
-﻿using Forum.Data.Models;
+﻿using System;
+using Forum.Data.Models;
 using Forum.Data.Models.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

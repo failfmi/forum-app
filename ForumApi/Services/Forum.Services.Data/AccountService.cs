@@ -72,6 +72,8 @@ namespace Forum.Services.Data
                 throw new Exception("Email is already taken!");
             }
 
+            user.DateRegistered = DateTime.UtcNow;
+
             await this.UserManager.CreateAsync(user, model.Password);
             await this.UserManager.AddToRoleAsync(user, Enum.GetName(typeof(Roles), 2));
         }
@@ -122,6 +124,7 @@ namespace Forum.Services.Data
         {
             var user = this.Mapper.Map<RegisterUserInputModel, User>(model);
             user.IsActive = true;
+            user.DateRegistered = DateTime.UtcNow;
 
             try
             {

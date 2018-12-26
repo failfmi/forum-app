@@ -54,6 +54,7 @@ namespace Forum.Services.Data
                 {
                     Email = userInfo.Email,
                     UserName = userInfo.Email,
+                    DateRegistered = DateTime.UtcNow
                 };
 
                 await this.UserManager.CreateAsync(appUser);
