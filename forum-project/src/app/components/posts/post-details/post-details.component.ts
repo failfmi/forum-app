@@ -36,7 +36,7 @@ export class PostDetailsComponent extends BaseComponent {
             this.post.creationDate = new Date(this.post.creationDate);
             this.post.comments.forEach(c => c.creationDate = new Date(c.creationDate));
           } else {
-            this.router.navigate(['/404']);
+            this.router.navigate(['/posts']);
           }
         }
       });

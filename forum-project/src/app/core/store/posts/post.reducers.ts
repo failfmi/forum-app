@@ -16,6 +16,9 @@ function getAllPosts(state, allRecipes) {
 }
 
 function addPost(state: PostState, post: PostModel) {
+  if (state.all.some(p => p.id === post.id)) {
+    return state;
+  }
   return Object.assign({}, state, {
     all: [...state.all, post]
   });

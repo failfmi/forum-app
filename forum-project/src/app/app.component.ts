@@ -5,6 +5,10 @@ import { Store, select } from '@ngrx/store';
 import { AppState } from './core/store/app.state';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { delay } from 'rxjs/operators';
+import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import * as signalR from '@aspnet/signalr';
+import { ToastrService } from 'ngx-toastr';
+import { Add, Delete } from './core/store/posts/post.actions';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +18,9 @@ import { delay } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   title = 'app';
   postsRequestFinished = false;
+  private hubConnection: HubConnection;
   constructor(private postService: PostsService,
-    private categoryService: CategoriesService, private store: Store<AppState>) {
+    private categoryService: CategoriesService, private store: Store<AppState>, private toastService: ToastrService) {
 
   }
 
@@ -27,5 +32,26 @@ export class AppComponent implements OnInit {
       .subscribe(made => {
         this.postsRequestFinished = made;
       });
+
+    this.hubConnection = new HubConnectionBuilder()
+      .withUrl('https://localhost:5001/api/notify')
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+      this.hubConnection
+        .start()
+        .catch(err => console.log(err.toString()));
+
+      this.hubConnection
+        .on('PostAdd', (data: any) => {
+          this.toastService.info(`A new post has been published: "${data.title}"`);
+          this.store.dispatch(new Add(data));
+        });
+
+      this.hubConnection
+        .on('PostDelete', (data: any) => {
+          this.toastService.info(`Post with title "${data.title}" has been deleted.`);
+          this.store.dispatch(new Delete(data.id));
+        });
   }
 }
