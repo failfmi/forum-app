@@ -314,6 +314,24 @@ namespace Forum.Web.Tests
         }
 
         [Theory]
+        [InlineData("test@test.com", "12341234", "test", 1, "ASdh1yu23i91233j12k3l1231231bdasijdsahudjsamca")]
+        [InlineData("test@test.com", "12341234", "test", 2, "ASdh1yu23i91233j12k3l1231231bdasijdsahudjsamca")]
+        public async Task DeleteCategoryFailDueToInvalidToken(string email, string password, string username, int id, string invalidToken)
+        {
+            await this.Register(email, password, username);
+            var token = await this.Login(email, password);
+
+            this.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + invalidToken);
+
+            var response = await this.client.DeleteAsync(CategoryDeleteEndpoint + id);
+
+            var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
+
+            Assert.Equal(StatusCodes.Status401Unauthorized, content.Status);
+            Assert.Equal("You are not authorized! Contact admin for further information.", content.Message);
+        }
+
+        [Theory]
         [InlineData(1)]
         [InlineData(2)]
         public async Task DeleteCategoryFailDueToUnauthorized(int id)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Forum.Data.DataTransferObjects.InputModels.Post;
 using Forum.Data.DataTransferObjects.InputModels.User;
 using Forum.Data.DataTransferObjects.ViewModels.User;
 using Forum.WebApi.Utils;
@@ -18,8 +19,12 @@ namespace Forum.Web.Tests
         private const string AdminBanEndpoint = "api/admin/ban/";
         private const string AdminUnBanEndpoint = "api/admin/unban/";
         private const string AdminGetAll = "api/admin/all";
+        private const string PostCreateEndpoint = "api/post/create";
 
         private const string UnauthorizedError = "You are unauthorized!";
+
+        private const string UnauthorizedMiddlewareError =
+            "You are not authorized! Contact admin for further information.";
 
         public AdminControllerTests(TestingWebApplicationFactory factory) : base(factory)
         {
@@ -354,6 +359,60 @@ namespace Forum.Web.Tests
             var secondResponseContent = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
             Assert.Equal($"User with id '{secondUser.Id}' is already active!", secondResponseContent.Message);
             Assert.Equal(StatusCodes.Status400BadRequest, secondResponseContent.Status);
+        }
+
+
+        [Theory]
+        [InlineData("admin@admin.com", "12341234", "test@test.com", "12341234", "test", 1, "Test Title", "Test Body with many letters")]
+        public async Task UserLoggedInBannedTryingToCreateAPost(string email, string password, string bannedUserEmail,
+            string bannedUserPassword, string bannedUserUsername, int categoryId, string title, string body)
+        {
+            await this.Register(bannedUserEmail, bannedUserPassword, bannedUserUsername);
+
+            var bannedUserToken = await this.Login(bannedUserEmail, bannedUserPassword);
+            var token = await this.Login(email, password);
+            this.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+            var response = await this.client.GetAsync(AdminGetAll);
+            var content = JsonConvert.DeserializeObject<ICollection<UserViewModel>>(await response.Content.ReadAsStringAsync());
+            var secondUser = content.First(uvm => uvm.Email == bannedUserEmail);
+
+            response.EnsureSuccessStatusCode();
+
+            Assert.Equal(email, content.First().Email);
+            Assert.Equal(bannedUserEmail, secondUser.Email);
+            var json = new StringContent(
+                JsonConvert.SerializeObject("{}"),
+                Encoding.UTF8,
+                "application/json");
+
+            response = await this.client.PostAsync(AdminBanEndpoint + secondUser.Id, json);
+
+            var secondResponseContent = JsonConvert.DeserializeObject<CreateEditReturnMessage<UserViewModel>>(await response.Content.ReadAsStringAsync());
+
+            Assert.Equal($"User banned successfully", secondResponseContent.Message);
+            Assert.Equal(StatusCodes.Status200OK, secondResponseContent.Status);
+
+            var post = new PostInputModel
+            {
+                CategoryId = categoryId,
+                Title = title,
+                Body = body
+            };
+
+            json = new StringContent(
+                JsonConvert.SerializeObject(post),
+                Encoding.UTF8,
+                "application/json");
+
+            this.client.DefaultRequestHeaders.Remove("Authorization");
+            this.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + bannedUserToken);
+
+            var responseBannedCreatePost= await this.client.PostAsync(PostCreateEndpoint, json);
+            var responseContent = JsonConvert.DeserializeObject<ReturnMessage>(await responseBannedCreatePost.Content.ReadAsStringAsync());
+
+            Assert.Equal(StatusCodes.Status401Unauthorized, responseContent.Status);
+            Assert.Equal(UnauthorizedMiddlewareError, responseContent.Message);
         }
     }
 }
