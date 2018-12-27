@@ -327,8 +327,8 @@ namespace Forum.Web.Tests
 
             var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
 
-            Assert.Equal(StatusCodes.Status401Unauthorized, content.Status);
-            Assert.Equal("You are not authorized! Contact admin for further information.", content.Message);
+            Assert.Equal(StatusCodes.Status400BadRequest, content.Status);
+            Assert.Equal("Something went wrong with the Authorization Token.", content.Message);
         }
 
         [Theory]

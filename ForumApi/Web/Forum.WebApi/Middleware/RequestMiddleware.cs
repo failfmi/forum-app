@@ -48,7 +48,9 @@ namespace Forum.WebApi.Middleware
                     }
                     catch (Exception e)
                     {
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        returnMessage = new ReturnMessage { Message = "Something went wrong with the Authorization Token.", Status = StatusCodes.Status400BadRequest };
+                        serialized = JsonConvert.SerializeObject(returnMessage);
                         await context.Response.WriteAsync(serialized);
                         return;
                     }
