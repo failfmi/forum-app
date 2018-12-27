@@ -13,6 +13,7 @@ using Forum.Data.Models.Users;
 using Forum.Services.Data;
 using Forum.Services.Data.Interfaces;
 using Forum.Services.Data.Utils;
+using Forum.WebApi.Hubs;
 using Forum.WebApi.Middleware;
 using Forum.WebApi.Middleware.Extensions;
 using Forum.WebApi.Utils;
@@ -110,6 +111,8 @@ namespace Forum.WebApi
 
             services.AddCors();
 
+            services.AddSignalR();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -160,6 +163,11 @@ namespace Forum.WebApi
             app.UseRequestMiddleware();
 
             app.UseHttpsRedirection();
+
+            app.UseSignalR(routes =>
+                {
+                    routes.MapHub<PostNotifyHub>("/api/notify");
+                });
             app.UseMvc();
         }
     }

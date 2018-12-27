@@ -94,7 +94,7 @@ namespace Forum.Services.Data
             return this.Mapper.Map<PostViewModel>(post);
         }
 
-        public async Task Delete(int id, string email)
+        public async Task<string> Delete(int id, string email)
         {
             if (this.IsValidId(id))
             {
@@ -116,6 +116,8 @@ namespace Forum.Services.Data
 
             this.postRepository.Delete(post);
             await this.postRepository.SaveChangesAsync();
+
+            return post.Title;
         }
 
         public ICollection<PostViewModel> All()

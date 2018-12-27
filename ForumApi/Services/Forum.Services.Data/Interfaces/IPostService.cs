@@ -14,7 +14,7 @@ namespace Forum.Services.Data.Interfaces
 
         Task<PostViewModel> Edit(PostInputEditModel model, string email);
 
-        Task Delete(int id, string email);
+        Task<string> Delete(int id, string email);
 
         ICollection<PostViewModel> All();
 

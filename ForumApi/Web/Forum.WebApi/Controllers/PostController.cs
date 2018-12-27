@@ -3,12 +3,15 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Forum.Data.DataTransferObjects.InputModels.Post;
 using Forum.Data.DataTransferObjects.ViewModels;
+using Forum.Data.DataTransferObjects.ViewModels.Hubs;
 using Forum.Data.DataTransferObjects.ViewModels.Post;
 using Forum.Services.Data.Interfaces;
+using Forum.WebApi.Hubs;
 using Forum.WebApi.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace Forum.WebApi.Controllers
@@ -18,10 +21,12 @@ namespace Forum.WebApi.Controllers
     public class PostController : BaseController
     {
         private readonly IPostService postService;
+        private readonly IHubContext<PostNotifyHub> hubContext;
 
-        public PostController(IPostService postService, ILogger<BaseController> logger) : base(logger)
+        public PostController(IHubContext<PostNotifyHub> hubContext, IPostService postService, ILogger<BaseController> logger) : base(logger)
         {
             this.postService = postService;
+            this.hubContext = hubContext;
         }
 
         [Authorize]
@@ -35,6 +40,8 @@ namespace Forum.WebApi.Controllers
             try
             {
                 var post = await this.postService.Create(model, this.User.FindFirst(ClaimTypes.Email).Value);
+
+                await this.hubContext.Clients.All.SendAsync("PostAdd", post);
 
                 return this.Ok(new CreateEditReturnMessage<PostViewModel>
                 { Message = "Post created successfully", Data = post });
@@ -82,7 +89,11 @@ namespace Forum.WebApi.Controllers
         {
             try
             {
-                await this.postService.Delete(id, this.User.FindFirst(ClaimTypes.Email).Value);
+                var title = await this.postService.Delete(id, this.User.FindFirst(ClaimTypes.Email).Value);
+
+                await this.hubContext.Clients.All.SendAsync("PostDelete",
+                    new PostDeleteNotification {Id = id, Title = title});
+
                 return this.Ok(new ReturnMessage { Message = "Post deleted successfully!" });
             }
             catch (UnauthorizedAccessException e)
