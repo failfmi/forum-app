@@ -21,6 +21,8 @@ namespace Forum.Data
 
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<ContactUs> ContactUs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
