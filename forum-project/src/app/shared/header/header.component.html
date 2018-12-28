@@ -3,6 +3,7 @@
       <a routerLink="/" mat-button class="text-white"><span><mat-icon>forum</mat-icon><span>Forum</span></span></a>
       <a routerLink="/posts" mat-button class="text-white">Posts</a>
       <a routerLink="/posts/create" mat-button *ngIf="authService.isAuthenticated()" class="text-white">Create Post</a>
+      <a routerLink="/contact" mat-button class="text-white">Contact Us</a>
   </span>
   <span class="blankSpace"></span>
   <span *ngIf="!authService.isAuthenticated(); else notAuthenticated">

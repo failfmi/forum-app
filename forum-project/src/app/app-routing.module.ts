@@ -6,11 +6,13 @@ import { AboutComponent } from './components/about/about.component';
 import { PostsModule } from './components/posts/posts.module';
 import { CommentsModule } from './components/comments/comments.module';
 import { AdminModule } from './components/admin/admin.module';
+import { ContactComponent } from './components/contact/contact.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home'},
   { path: 'about', component: AboutComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'contact', component: ContactComponent },
   { path: 'comments', loadChildren: () => CommentsModule },
   { path: 'posts', loadChildren: () => PostsModule },
   { path: 'admin', loadChildren: () => AdminModule},
