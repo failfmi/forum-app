@@ -13,6 +13,7 @@
   <ng-template #notAuthenticated>
       <span>
         <a routerLink="/about" mat-button class="text-white">About</a>
+        <a routerLink="/my" mat-button class="text-white">My profile</a>
         <a *ngIf="authService.isAdmin()" routerLink="/admin" mat-button class="text-white">Admin</a>
         <button mat-button (click)="authService.logout()">Logout</button>
       </span>

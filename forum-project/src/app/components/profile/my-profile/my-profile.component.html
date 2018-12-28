@@ -1,0 +1,36 @@
+<div class="container mt-5">
+  <div class="margin">
+    <h5>My Login History</h5>
+  </div>
+  <div>
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th>Ip</th>
+          <th>Location</th>
+          <th>Date Logged In</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="pointer" *ngFor="let lh of history | paginate: { id: 'allPosts', itemsPerPage: pageSize, currentPage: currentPage}">
+            <td>{{lh.ip}}</td>
+            <td>{{lh.location}}</td>
+            <td>{{lh.loginDate.toLocaleString() | date: 'medium'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <pagination-controls
+  id="allPosts"
+  (pageChange)="changePage($event)"
+  maxSize="9"
+  directionLinks="true"
+  autoHide="true"
+  previousLabel="Previous"
+  nextLabel="Next"
+  screenReaderPaginationLabel="Pagination"
+  screenReaderPageLabel="page"
+  screenReaderCurrentLabel="You're on page"
+  >
+  </pagination-controls>
+</div>

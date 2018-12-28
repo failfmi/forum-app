@@ -7,6 +7,7 @@ import { PostsModule } from './components/posts/posts.module';
 import { CommentsModule } from './components/comments/comments.module';
 import { AdminModule } from './components/admin/admin.module';
 import { ContactComponent } from './components/contact/contact.component';
+import { ProfileModule } from './components/profile/profile.module';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home'},
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'comments', loadChildren: () => CommentsModule },
   { path: 'posts', loadChildren: () => PostsModule },
   { path: 'admin', loadChildren: () => AdminModule},
+  { path: 'my', loadChildren: () => ProfileModule},
   { path: '**', component: NotFoundComponent }
 ];
 
