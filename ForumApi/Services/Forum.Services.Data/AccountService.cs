@@ -83,7 +83,10 @@ namespace Forum.Services.Data
         {
             var user = this.UserManager.Users.SingleOrDefault(u => u.UserName == username);
 
-            var loginHistory = this.loginInfoRepository.Query().Where(li => li.UserId == user.Id).ToList();
+            var loginHistory = this.loginInfoRepository
+                .Query()
+                .Where(li => li.UserId == user.Id)
+                .OrderByDescending(li => li.LoginDate).ToList();
 
             return this.Mapper.Map<ICollection<LoginInfoViewModel>>(loginHistory);
         }
