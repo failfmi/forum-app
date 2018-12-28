@@ -12,6 +12,7 @@ using Forum.Data.Common.Interfaces;
 using Forum.Data.DataTransferObjects.Enums;
 using Forum.Data.DataTransferObjects.InputModels.User;
 using Forum.Data.DataTransferObjects.ViewModels.IpInformation;
+using Forum.Data.DataTransferObjects.ViewModels.User;
 using Forum.Data.Models.Users;
 using Forum.Services.Data.Interfaces;
 using Forum.Services.Data.Utils;
@@ -76,6 +77,15 @@ namespace Forum.Services.Data
 
             await this.UserManager.CreateAsync(user, model.Password);
             await this.UserManager.AddToRoleAsync(user, Enum.GetName(typeof(Roles), 2));
+        }
+
+        public ICollection<LoginInfoViewModel> GetUserLoginInfo(string username)
+        {
+            var user = this.UserManager.Users.SingleOrDefault(u => u.UserName == username);
+
+            var loginHistory = this.loginInfoRepository.Query().Where(li => li.UserId == user.Id).ToList();
+
+            return this.Mapper.Map<ICollection<LoginInfoViewModel>>(loginHistory);
         }
 
         public async Task<string> Login(LoginUserInputModel model)

@@ -31,6 +31,8 @@ namespace Forum.Data.DataTransferObjects
 
             this.CreateMap<ContactUsInputModel, ContactUs>();
 
+            this.CreateMap<LoginInfo, LoginInfoViewModel>();
+
             this.CreateMap<PostInputModel, Post>();
             this.CreateMap<PostInputEditModel, Post>();
             this.CreateMap<Post, PostViewModel>()

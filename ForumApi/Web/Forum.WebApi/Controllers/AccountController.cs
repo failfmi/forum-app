@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Forum.Data.DataTransferObjects.InputModels.User;
 using Forum.Data.DataTransferObjects.ViewModels.User;
@@ -62,6 +63,24 @@ namespace Forum.WebApi.Controllers
             catch (Exception e)
             {
                 return this.BadRequest(new ReturnMessage {Message = "Invalid e-mail or password!"});
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<object> History()
+        {
+            try
+            {
+                var history = this.accountService.GetUserLoginInfo(this.User.FindFirst(ClaimTypes.Name).Value);
+                return this.Ok(history);
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new ReturnMessage { Message = "Something went wrong!" });
             }
         }
     }
