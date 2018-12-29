@@ -174,6 +174,7 @@ namespace Forum.Services.Data
             {
                 UserId = userId,
                 Ip = ipInformation.IP,
+                ApiKey = this.geoLocationSettings.AccessKey,
                 Location = $"{ipInformation.City}, {ipInformation.RegionName}, {ipInformation.CountryName}",
                 LoginDate = DateTime.UtcNow
             };

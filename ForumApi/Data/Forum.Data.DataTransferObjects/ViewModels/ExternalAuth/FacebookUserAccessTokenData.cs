@@ -10,10 +10,6 @@ namespace Forum.Data.DataTransferObjects.ViewModels.ExternalAuth
         [JsonProperty("app_id")]
         public long AppId { get; set; }
 
-        public string Type { get; set; }
-
-        public string Application { get; set; }
-
         [JsonProperty("expires_at")]
         public long ExpiresAt { get; set; }
 
