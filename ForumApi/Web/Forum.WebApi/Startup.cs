@@ -14,6 +14,7 @@ using Forum.Services.Data;
 using Forum.Services.Data.Interfaces;
 using Forum.Services.Data.Utils;
 using Forum.WebApi.Hubs;
+using Forum.WebApi.Logging.Extensions;
 using Forum.WebApi.Middleware;
 using Forum.WebApi.Middleware.Extensions;
 using Forum.WebApi.Utils;
@@ -118,7 +119,7 @@ namespace Forum.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -139,6 +140,8 @@ namespace Forum.WebApi
                 new DatabaseInitializer().Seed(roleManager, userManager, Configuration, accountService, logger, userRepository, categoryRepository, postRepository).Wait();
             }
 
+            loggerFactory.AddContext(app, LogLevel.Warning);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -153,7 +156,6 @@ namespace Forum.WebApi
             {
                 app.UseMiddleware<FakeRemoteIpAddressMiddleware>();
             }
-
 
             app.UseCors(builder => builder
                 .AllowAnyMethod()

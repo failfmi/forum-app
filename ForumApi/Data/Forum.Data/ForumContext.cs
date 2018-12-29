@@ -23,6 +23,8 @@ namespace Forum.Data
 
         public DbSet<ContactUs> ContactUs { get; set; }
 
+        public DbSet<EventLog> Logs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
