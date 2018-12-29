@@ -30,11 +30,28 @@ namespace Forum.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<object> Facebook([FromBody] FacebookLoginModel model)
+        public async Task<object> Facebook([FromBody] ExternalLoginModel model)
         {
             try
             {
                 var token = await this.externalAccountService.FacebookLogin(model);
+                return this.Ok(new LoginViewModel { Message = "You have successfully logged in!", Token = token });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new ReturnMessage { Message = e.Message });
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<object> Gmail([FromBody] ExternalLoginModel model)
+        {
+            try
+            {
+                var token = await this.externalAccountService.GmailLogin(model);
                 return this.Ok(new LoginViewModel { Message = "You have successfully logged in!", Token = token });
             }
             catch (Exception e)

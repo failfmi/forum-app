@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Forum.Data.DataTransferObjects.ViewModels.ExternalAuth
 {
-    public class FacebookLoginModel
+    public class ExternalLoginModel
     {
         public string Token { get; set; }
     }

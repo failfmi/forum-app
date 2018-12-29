@@ -21,7 +21,9 @@ namespace Forum.Web.Tests.AccountController
         private readonly HttpClient client;
 
         private const string LoginFacebookEndpoint = "api/external/facebook";
+        private const string LoginGmailEndpoint = "api/external/gmail";
         private const string LoginInvalidFacebookTokenMessage = "Invalid Facebook Token.";
+        private const string LoginInvalidGmailTokenMessage = "Invalid Google+ Token.";
 
         public ExternalLoginTests(TestingWebApplicationFactory factory)
         {
@@ -38,7 +40,7 @@ namespace Forum.Web.Tests.AccountController
         [InlineData("EAAEMkfF5gCoBAIrZBrkB8klZBMerLJ1l1rCd2QMT9WhZCK3aC1lXZB3DwtoAIufkk8sPmXoXhr0KIPlqMlRYTeKi6PoyhkF7iZBVZBy9S9Wzv6s9yZBayRZCbCLBqSxsyzPOLVddxEyZBp3SZBJEWGWGi9YSwodYbg95mU2ZCxcuTaOSlgFQJbvq9816aTlCmZBAC4qvgsq8c6p8hAjBRYiMkYeR")]
         public async Task LoginFacebookFailWithInvalidToken(string token)
         {
-            var user = new FacebookLoginModel
+            var user = new ExternalLoginModel
             {
                 Token = token
             };
@@ -53,6 +55,28 @@ namespace Forum.Web.Tests.AccountController
             var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
 
             Assert.Equal(LoginInvalidFacebookTokenMessage, content.Message);
+            Assert.Equal(StatusCodes.Status400BadRequest, content.Status);
+        }
+
+        [Theory]
+        [InlineData("eyJhbGciOiJSUzI1N.iEI7tE7-4D3OQbrcMlr5y-GaE8VeLdLubF_9ZxeP7")]
+        public async Task LoginGmailFailWithInvalidToken(string token)
+        {
+            var user = new ExternalLoginModel
+            {
+                Token = token
+            };
+
+            var json = new StringContent(
+                JsonConvert.SerializeObject(user),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await client.PostAsync(LoginGmailEndpoint, json);
+
+            var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
+
+            Assert.Equal(LoginInvalidGmailTokenMessage, content.Message);
             Assert.Equal(StatusCodes.Status400BadRequest, content.Status);
         }
     }

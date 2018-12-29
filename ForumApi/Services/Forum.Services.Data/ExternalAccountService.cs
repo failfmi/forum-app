@@ -23,13 +23,14 @@ namespace Forum.Services.Data
     public class ExternalAccountService : AccountService, IExternalAccountService
     {
         private readonly FacebookSettings fbSettings;
+        private const string GmailLoginVerifier = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={0}";
 
         public ExternalAccountService(IOptions<FacebookSettings> fbSettings, UserManager<User> userManager, IHttpContextAccessor accessor, IOptions<GeoLocationSettings> geoLocationSettings, IOptions<JwtSettings> jwtSettings, ILogger<BaseService> logger, IMapper mapper, IRepository<User> userRepository, IRepository<LoginInfo> loginInfoRepository, SignInManager<User> signInManager) : base(userManager, accessor, geoLocationSettings, jwtSettings, logger, mapper, userRepository, loginInfoRepository, signInManager)
         {
             this.fbSettings = fbSettings.Value;
         }
 
-        public async Task<string> FacebookLogin(FacebookLoginModel model)
+        public async Task<string> FacebookLogin(ExternalLoginModel model)
         {
             var appAccessTokenResponse = await client.GetStringAsync($"https://graph.facebook.com/oauth/access_token?client_id={fbSettings.AppId}&client_secret={fbSettings.AppSecret}&grant_type=client_credentials");
 
@@ -62,6 +63,52 @@ namespace Forum.Services.Data
             }
 
             user = await this.UserManager.FindByEmailAsync(userInfo.Email);
+
+            await this.LoginInfo(user.Id);
+
+            return this.GenerateToken(user);
+        }
+
+        public async Task<string> GmailLogin(ExternalLoginModel model)
+        {
+            var accessTokenValidationResponse = await this.client.GetAsync(string.Format(GmailLoginVerifier, model.Token));
+
+            try
+            {
+                accessTokenValidationResponse.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Invalid Google+ Token.");
+            }
+
+            var content = JsonConvert.DeserializeObject<GoogleApiTokenInfo>(await accessTokenValidationResponse.Content.ReadAsStringAsync());
+
+            var user = await this.UserManager.FindByEmailAsync(content.email);
+
+            if (user is null)
+            {
+                var appUser = new User
+                {
+                    Email = content.email,
+                    UserName = content.email,
+                    DateRegistered = DateTime.UtcNow
+                };
+
+                await this.UserManager.CreateAsync(appUser);
+                await this.UserManager.AddToRoleAsync(appUser, Enum.GetName(typeof(Roles), 2));
+            }
+            else
+            {
+                if (user.UserName != content.email)
+                {
+                    throw new Exception("Email is already taken.");
+                }
+            }
+
+            user = await this.UserManager.FindByEmailAsync(content.email);
+
+            await this.LoginInfo(user.Id);
 
             return this.GenerateToken(user);
         }

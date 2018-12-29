@@ -111,24 +111,7 @@ namespace Forum.Services.Data
                 throw new Exception("Invalid username or password!");
             }
 
-            var ipAddress = this.accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-
-            var apiIpResult = await client.GetStringAsync(this.geoLocationSettings.Url
-                                                         + ipAddress
-                                                         + this.geoLocationSettings.AccessKey);
-
-            var ipInformation = JsonConvert.DeserializeObject<IpInformationViewModel>(apiIpResult);
-
-            var logInfo = new LoginInfo
-            {
-                UserId = user.Id,
-                Ip = ipInformation.IP,
-                Location = $"{ipInformation.City}, {ipInformation.RegionName}, {ipInformation.CountryName}",
-                LoginDate = DateTime.UtcNow
-            };
-
-            await this.loginInfoRepository.AddAsync(logInfo);
-            await this.loginInfoRepository.SaveChangesAsync();
+            await this.LoginInfo(user.Id);
 
             return GenerateToken(user);
         }
@@ -174,6 +157,29 @@ namespace Forum.Services.Data
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        protected async Task LoginInfo(string userId)
+        {
+
+            var ipAddress = this.accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+
+            var apiIpResult = await client.GetStringAsync(this.geoLocationSettings.Url
+                                                          + ipAddress
+                                                          + this.geoLocationSettings.AccessKey);
+
+            var ipInformation = JsonConvert.DeserializeObject<IpInformationViewModel>(apiIpResult);
+
+            var logInfo = new LoginInfo
+            {
+                UserId = userId,
+                Ip = ipInformation.IP,
+                Location = $"{ipInformation.City}, {ipInformation.RegionName}, {ipInformation.CountryName}",
+                LoginDate = DateTime.UtcNow
+            };
+
+            await this.loginInfoRepository.AddAsync(logInfo);
+            await this.loginInfoRepository.SaveChangesAsync();
         }
     }
 }

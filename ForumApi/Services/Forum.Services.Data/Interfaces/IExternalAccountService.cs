@@ -9,6 +9,8 @@ namespace Forum.Services.Data.Interfaces
 {
     public interface IExternalAccountService
     {
-        Task<string> FacebookLogin(FacebookLoginModel model);
+        Task<string> FacebookLogin(ExternalLoginModel model);
+
+        Task<string> GmailLogin(ExternalLoginModel model);
     }
 }
