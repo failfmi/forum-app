@@ -26,7 +26,10 @@ export class JWTInterceptor implements HttpInterceptor {
   }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // posts all ?
-    if (req.url.endsWith('api/account/login') || req.url.endsWith('/api/account/register') || req.url.endsWith('/api/external/facebook')) {
+    if (req.url.endsWith('api/account/login')
+    || req.url.endsWith('/api/account/register')
+    || req.url.endsWith('/api/external/facebook')
+    || req.url.endsWith('api/external/gmail')) {
       req = req.clone({
         setHeaders: {
           'Content-type': 'application/json'
@@ -48,6 +51,10 @@ export class JWTInterceptor implements HttpInterceptor {
         }
 
         if (res instanceof HttpResponse && req.url.endsWith('/api/external/facebook')) {
+          this.saveToken(res.body);
+        }
+
+        if (res instanceof HttpResponse && req.url.endsWith('/api/external/gmail')) {
           this.saveToken(res.body);
         }
 

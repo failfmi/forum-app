@@ -10,11 +10,12 @@ import { CookieService } from 'ngx-cookie-service';
 import { Logout, Auth } from '../../store/auth/auth.actions';
 import * as jwt_decode from 'jwt-decode';
 import { AuthModel } from '../../models/auth/auth.model';
-import { FacebookModel } from '../../models/auth/facebook.model';
+import { ExternalLoginModel } from '../../models/auth/facebook.model';
 
 const loginUrl = 'https://localhost:5001/api/account/login';
 const registerUrl = 'https://localhost:5001/api/account/register';
 const externalFacebookUrl = 'https://localhost:5001/api/external/facebook';
+const externalLoginGmailUrl = 'https://localhost:5001/api/external/gmail';
 
 @Injectable()
 export class AuthService {
@@ -56,8 +57,12 @@ export class AuthService {
     return this.http.post(loginUrl, body);
   }
 
-  loginFacebook(body: FacebookModel) {
+  loginFacebook(body: ExternalLoginModel) {
     return this.http.post(externalFacebookUrl, body);
+  }
+
+  loginGmail(body: ExternalLoginModel) {
+    return this.http.post(externalLoginGmailUrl, body);
   }
 
   logout() {

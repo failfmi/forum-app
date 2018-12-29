@@ -6,7 +6,7 @@ import { MatDialogRef } from '@angular/material';
 import { BaseComponent } from '../../base.component';
 import { AuthService as ExternalAuthService } from 'angularx-social-login';
 import { FacebookLoginProvider, GoogleLoginProvider, LinkedInLoginProvider } from 'angularx-social-login';
-import { FacebookModel } from 'src/app/core/models/auth/facebook.model';
+import { ExternalLoginModel } from 'src/app/core/models/auth/facebook.model';
 
 @Component({
   selector: 'app-login',
@@ -45,10 +45,25 @@ export class LoginComponent extends BaseComponent {
   externalLogin(): void {
     this.externalAuthService.signIn(FacebookLoginProvider.PROVIDER_ID)
       .then(result => {
-        this.authService.loginFacebook(new FacebookModel(result.authToken))
+        this.authService.loginFacebook(new ExternalLoginModel(result.authToken))
           .subscribe(() => this.onNoClick(), (error) => {
             this.onNoClick();
           });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  externalGmail(): void {
+    this.externalAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(result => {
+        this.authService.loginGmail(new ExternalLoginModel(result.idToken))
+          .subscribe(() => this.onNoClick(), (error) => {
+            this.onNoClick();
+          });
+      })
+      .catch(err => {
       });
   }
 }

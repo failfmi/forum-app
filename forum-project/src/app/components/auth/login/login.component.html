@@ -1,4 +1,6 @@
 <h1 mat-dialog-title>Login</h1>
+<button type="button" mat-raised-button ripple-radius (click)="externalLogin()"><i class="fa fa-facebook left"></i></button>
+<button type="button" mat-raised-button ripple-radius (click)="externalGmail()"><i class="fa fa-google-plus left"></i></button>
 <mat-dialog-content>
   <form [formGroup]="loginForm">
     <mat-form-field>
@@ -26,7 +28,3 @@
   <button [disabled]="!loginForm.valid" mat-raised-button mat-primary (click)="login()">Login</button>
 </mat-dialog-actions>
 
-<h3>or with</h3>
-<mat-dialog-actions>
-  <i class="fa fa-facebook-official" (click)="externalLogin()"></i>
-</mat-dialog-actions>
