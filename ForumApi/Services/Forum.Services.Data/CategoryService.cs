@@ -51,7 +51,9 @@ namespace Forum.Services.Data
                 throw new Exception($"Category with name '{model.Name}' already exists.");
             }
 
-            var category = this.Mapper.Map<CategoryInputEditModel, Category>(model);
+            //var category = this.Mapper.Map<CategoryInputEditModel, Category>(model);
+            var category = this.categoryRepository.Query().FirstOrDefault(c => c.Id == model.Id);
+            category.Name = model.Name;
 
             this.categoryRepository.Update(category);
             await this.categoryRepository.SaveChangesAsync();
