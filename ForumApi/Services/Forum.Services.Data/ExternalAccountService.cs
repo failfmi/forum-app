@@ -24,6 +24,7 @@ namespace Forum.Services.Data
     {
         private readonly FacebookSettings fbSettings;
         private const string GmailLoginVerifier = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={0}";
+        private const string UserBannedErrorMessage = "You are banned! Contact admin for further information.";
 
         public ExternalAccountService(IOptions<FacebookSettings> fbSettings, UserManager<User> userManager, IHttpContextAccessor accessor, IOptions<GeoLocationSettings> geoLocationSettings, IOptions<JwtSettings> jwtSettings, ILogger<BaseService> logger, IMapper mapper, IRepository<User> userRepository, IRepository<LoginInfo> loginInfoRepository, SignInManager<User> signInManager) : base(userManager, accessor, geoLocationSettings, jwtSettings, logger, mapper, userRepository, loginInfoRepository, signInManager)
         {
@@ -63,6 +64,11 @@ namespace Forum.Services.Data
             }
 
             user = await this.UserManager.FindByEmailAsync(userInfo.Email);
+
+            if (user.IsActive == false)
+            {
+                throw new UnauthorizedAccessException(UserBannedErrorMessage);
+            }
 
             await this.LoginInfo(user.Id);
 
@@ -107,6 +113,11 @@ namespace Forum.Services.Data
             }
 
             user = await this.UserManager.FindByEmailAsync(content.email);
+
+            if (user.IsActive == false)
+            {
+                throw new UnauthorizedAccessException(UserBannedErrorMessage);
+            }
 
             await this.LoginInfo(user.Id);
 
