@@ -82,7 +82,11 @@ namespace Forum.Services.Data
                 throw new UnauthorizedAccessException("You are not allowed for this operation.");
             }
 
-            var post = this.Mapper.Map<Post>(model);
+            var post = this.postRepository.Query().First(p => p.Id == model.Id);
+
+            post.Title = model.Title;
+            post.Body = model.Body;
+            post.CategoryId = model.CategoryId;
             post.CreationDate = DateTime.UtcNow;
             post.AuthorId = postDb?.AuthorId;
 
