@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Forum.Data.DataTransferObjects.InputModels.Category;
 using Forum.Data.DataTransferObjects.ViewModels.Category;
+using Forum.Data.DataTransferObjects.ViewModels.Hubs;
 using Forum.Services.Data.Interfaces;
 using Forum.WebApi.Controllers;
+using Forum.WebApi.Hubs;
 using Forum.WebApi.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace Forum.WebApi.Areas.Admin.Controllers
@@ -18,9 +21,12 @@ namespace Forum.WebApi.Areas.Admin.Controllers
     public class CategoryController : BaseController
     {
         private readonly ICategoryService categoryService;
-        public CategoryController(ICategoryService categoryService, ILogger<BaseController> logger) : base(logger)
+        private readonly IHubContext<NotifyHub> hubContext;
+
+        public CategoryController(ICategoryService categoryService, IHubContext<NotifyHub> hubContext, ILogger<BaseController> logger) : base(logger)
         {
             this.categoryService = categoryService;
+            this.hubContext = hubContext;
         }
 
         [HttpPost]
@@ -35,6 +41,8 @@ namespace Forum.WebApi.Areas.Admin.Controllers
                 try
                 {
                     var category = await this.categoryService.Create(model);
+
+                    await this.hubContext.Clients.All.SendAsync("CategoryAdd", category);
 
                     return this.Ok(new CreateEditReturnMessage<CategoryViewModel>
                     { Message = "Category created successfully", Data = category });
@@ -89,7 +97,11 @@ namespace Forum.WebApi.Areas.Admin.Controllers
             {
                 try
                 {
-                    await this.categoryService.Delete(id);
+                    var name = await this.categoryService.Delete(id);
+
+                    await this.hubContext.Clients.All.SendAsync("CategoryDelete",
+                        new DeleteNotification {Id = id, Title = name});
+
                     return this.Ok(new ReturnMessage { Message = $"Category with id {id} successfully deleted" });
                 }
                 catch (Exception e)

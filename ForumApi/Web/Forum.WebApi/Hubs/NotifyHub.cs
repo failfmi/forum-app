@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Forum.WebApi.Hubs
 {
-    public class PostNotifyHub : Hub
+    public class NotifyHub : Hub
     {
         public async Task Send(PostViewModel model)
         {

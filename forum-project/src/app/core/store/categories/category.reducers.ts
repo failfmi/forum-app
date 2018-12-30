@@ -16,6 +16,9 @@ function getAllCategories(state, allRecipes) {
 }
 
 function addCategory(state: CategoryState, category: CategoryEditModel) {
+  if (state.all.some(c => c.id === category.id)) {
+    return state;
+  }
   return Object.assign({}, state, {
     all: [...state.all, category]
   });

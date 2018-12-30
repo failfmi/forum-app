@@ -9,6 +9,7 @@ import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
 import { ToastrService } from 'ngx-toastr';
 import { Add, Delete } from './core/store/posts/post.actions';
+import * as CategoryActions from './core/store/categories/category.actions';
 
 @Component({
   selector: 'app-root',
@@ -52,6 +53,18 @@ export class AppComponent implements OnInit {
         .on('PostDelete', (data: any) => {
           this.toastService.info(`Post with title "${data.title}" has been deleted.`);
           this.store.dispatch(new Delete(data.id));
+        });
+
+      this.hubConnection
+        .on('CategoryAdd', (data: any) => {
+          this.toastService.info(`A new category has been added: "${data.name}"`);
+          this.store.dispatch(new CategoryActions.Add(data));
+        });
+
+      this.hubConnection
+        .on('CategoryDelete', (data:any) => {
+          this.toastService.info(`Category "${data.title}" has been deleted. All related posts will be deleted shortly.`);
+          this.store.dispatch(new CategoryActions.Delete(data.id));
         });
   }
 }

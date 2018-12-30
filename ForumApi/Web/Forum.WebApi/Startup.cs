@@ -169,7 +169,7 @@ namespace Forum.WebApi
 
             app.UseSignalR(routes =>
                 {
-                    routes.MapHub<PostNotifyHub>("/api/notify");
+                    routes.MapHub<NotifyHub>("/api/notify");
                 });
             app.UseMvc();
         }

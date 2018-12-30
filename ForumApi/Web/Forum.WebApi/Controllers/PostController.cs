@@ -21,9 +21,9 @@ namespace Forum.WebApi.Controllers
     public class PostController : BaseController
     {
         private readonly IPostService postService;
-        private readonly IHubContext<PostNotifyHub> hubContext;
+        private readonly IHubContext<NotifyHub> hubContext;
 
-        public PostController(IHubContext<PostNotifyHub> hubContext, IPostService postService, ILogger<BaseController> logger) : base(logger)
+        public PostController(IHubContext<NotifyHub> hubContext, IPostService postService, ILogger<BaseController> logger) : base(logger)
         {
             this.postService = postService;
             this.hubContext = hubContext;
@@ -92,7 +92,7 @@ namespace Forum.WebApi.Controllers
                 var title = await this.postService.Delete(id, this.User.FindFirst(ClaimTypes.Email).Value);
 
                 await this.hubContext.Clients.All.SendAsync("PostDelete",
-                    new PostDeleteNotification {Id = id, Title = title});
+                    new DeleteNotification {Id = id, Title = title});
 
                 return this.Ok(new ReturnMessage { Message = "Post deleted successfully!" });
             }
