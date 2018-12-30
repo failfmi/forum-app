@@ -59,7 +59,7 @@ namespace Forum.Services.Data
             return this.Mapper.Map<Category, CategoryViewModel>(category);
         }
 
-        public async Task Delete(int id)
+        public async Task<string> Delete(int id)
         {
             if (IsValidCategoryId(id))
             {
@@ -70,6 +70,8 @@ namespace Forum.Services.Data
 
             this.categoryRepository.Delete(category);
             await this.categoryRepository.SaveChangesAsync();
+
+            return category.Name;
         }
 
         public CategoryViewModel GetById(int id)

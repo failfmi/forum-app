@@ -13,7 +13,7 @@ namespace Forum.Services.Data.Interfaces
 
         Task<CategoryViewModel> Edit(CategoryInputEditModel model);
 
-        Task Delete(int id);
+        Task<string> Delete(int id);
 
         CategoryViewModel GetById(int id);
 

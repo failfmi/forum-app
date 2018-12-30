@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Forum.Data.DataTransferObjects.ViewModels.Hubs
 {
-    public class PostDeleteNotification
+    public class DeleteNotification
     {
         public string Title { get; set; }
 
