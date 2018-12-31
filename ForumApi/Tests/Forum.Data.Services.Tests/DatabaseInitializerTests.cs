@@ -68,7 +68,17 @@ namespace Forum.Data.Services.Tests
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(options =>
+                {
+                    options.User.RequireUniqueEmail = true;
+                    options.SignIn.RequireConfirmedEmail = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequiredUniqueChars = 0;
+                    options.Password.RequiredLength = 6;
+                })
                 .AddEntityFrameworkStores<ForumContext>()
                 .AddDefaultTokenProviders();
 
@@ -95,6 +105,12 @@ namespace Forum.Data.Services.Tests
                 categoryRepository, postRepository);
             var categories = this.categoryRepository.Query().ToList();
             Assert.Equal(expectedCategories.Length, categories.Count);
+
+            var users = this.userRepository.Query().ToList();
+            var user = users.First();
+            Assert.Single(users);
+            Assert.Equal("admin", user.UserName);
+            Assert.Equal("admin@admin.com", user.Email);
 
             int i = 0;
             foreach (var category in categories)
