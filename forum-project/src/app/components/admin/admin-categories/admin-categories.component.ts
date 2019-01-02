@@ -21,7 +21,7 @@ export class AdminCategoriesComponent {
 
   constructor(protected fb: FormBuilder, private categoryService: CategoriesService, public dialog: MatDialog) {
     this.createForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]]
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]]
     });
   }
 

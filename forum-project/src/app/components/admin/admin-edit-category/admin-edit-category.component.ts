@@ -15,7 +15,7 @@ export class AdminEditCategoryComponent {
     @Inject(MAT_DIALOG_DATA) public data, protected fb: FormBuilder, private categoryService: CategoriesService) {
       this.editForm = this.fb.group({
         id: [data.category.id],
-        name: [data.category.name, [Validators.required, Validators.minLength(3)]]
+        name: [data.category.name, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]]
       });
     }
 
