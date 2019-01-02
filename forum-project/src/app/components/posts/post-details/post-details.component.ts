@@ -52,8 +52,6 @@ export class PostDetailsComponent extends BaseComponent {
   }
 
   deleteComment(id: string) {
-    console.log(id);
-    console.log(this.post.id);
     this.commentService.deleteComment(id, this.post.id);
   }
 

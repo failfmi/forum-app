@@ -10,7 +10,7 @@ namespace Forum.Data.DataTransferObjects.InputModels.Comment
         [Required]
         public int Id { get; set; }
 
-        [Required, MinLength(6, ErrorMessage = "Comment Edit Model must be at least 6 symbols.")]
+        [Required, MinLength(6, ErrorMessage = "Comment Edit Text must be at least 6 symbols."), MaxLength(200, ErrorMessage = "Comment Text must be maximum 200 symbols.")]
         public string Text { get; set; }
     }
 }

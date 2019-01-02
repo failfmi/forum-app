@@ -40,7 +40,7 @@ export class CommentCreateComponent extends BaseComponent implements OnInit {
           }
         });
       this.createForm = this.fb.group({
-        text: ['', [Validators.required, Validators.minLength(6)]]
+        text: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(200)]]
       });
       this.subscriptions.push(this.subscription$);
   }

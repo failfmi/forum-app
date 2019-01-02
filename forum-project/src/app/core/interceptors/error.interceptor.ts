@@ -21,7 +21,6 @@ export class ErrorInterceptor implements HttpInterceptor {
         switch (err.status) {
           case 400:
             this.spinner.hide();
-            debugger;
             if (err.error.errors) {
               const message = Object.keys(err.error.errors)
               .map(e => err.error.errors[e])

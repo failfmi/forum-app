@@ -19,6 +19,9 @@
           <mat-error *ngIf="title.invalid && (title.dirty || title.touched) && title.errors.minlength">
             Title must be at least 6 symbols
           </mat-error>
+          <mat-error *ngIf="title.invalid && (title.dirty || title.touched) && title.errors.maxlength">
+            Title must be maximum 50 symbols
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <textarea matInput formControlName="body" placeHolder="Body" rows="20" cols="30"></textarea>
@@ -29,7 +32,7 @@
             Body must be at least 10 symbols
           </mat-error>
           <mat-error *ngIf="body.invalid && (body.dirty || body.touched) && body.errors.maxlength">
-            Body must be maximum 1000 symbols
+            Body must be maximum 2000 symbols
             </mat-error>
         </mat-form-field>
   </form>

@@ -44,11 +44,9 @@ export class PostEditComponent extends BaseComponent {
           }
           this.editForm = this.fb.group({
             category: [this.post.category.name, [Validators.required]],
-            title: [this.post.title, [Validators.required, Validators.minLength(6)]],
-            body: [this.post.body, [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
+            title: [this.post.title, [Validators.required, Validators.minLength(6), Validators.maxLength(50)]],
+            body: [this.post.body, [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]]
           });
-
-          console.log(this.editForm);
         });
 
       this.subscriptions.push(this.subscriptionCat$);

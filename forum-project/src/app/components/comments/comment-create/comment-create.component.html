@@ -11,6 +11,9 @@
         <mat-error *ngIf="text.invalid && (text.dirty || text.touched) && text.errors.minlength">
           Body must be at least 6 symbols
         </mat-error>
+        <mat-error *ngIf="text.invalid && (text.dirty || text.touched) && text.errors.maxlength">
+          Body must be maximum 200 symbols
+        </mat-error>
       </mat-form-field>
   </form>
   <mat-dialog-actions>

@@ -25,8 +25,8 @@ export class PostsCreateComponent extends BaseComponent implements OnInit {
 
     this.createForm = this.fb.group({
       category: ['', [Validators.required]],
-      title: ['', [Validators.required, Validators.minLength(6)]],
-      body: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
+      title: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(50)]],
+      body: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]]
     });
   }
 

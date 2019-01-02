@@ -14,7 +14,7 @@ export class CommentEditComponent {
   constructor(public dialogRef: MatDialogRef<CommentEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data, protected fb: FormBuilder, private commentService: CommentsService) {
       this.editForm = this.fb.group({
-        text: [data.comment.text, [Validators.required, Validators.minLength(6)]]
+        text: [data.comment.text, [Validators.required, Validators.minLength(6), Validators.maxLength(200)]]
       });
     }
 
