@@ -18,8 +18,13 @@
             <td>{{u.dateRegistered.toLocaleString()}}</td>
             <td>{{u.isAdmin}}</td>
             <td>{{u.isBanned}}</td>
-            <td><span *ngIf="!u.isBanned"><button mat-raised-button (click)="banUser(u.id)">Ban</button></span>
-            <span *ngIf="u.isBanned"><button mat-flat-button (click)="unbanUser(u.id)">Unban</button></span></td>
+            <td *ngIf="u.isAdmin">
+              
+            </td>
+            <td *ngIf="!u.isAdmin">
+              <span *ngIf="!u.isBanned"><button mat-raised-button (click)="banUser(u.id)">Ban</button></span>
+              <span *ngIf="u.isBanned"><button mat-flat-button (click)="unbanUser(u.id)">Unban</button></span>
+            </td>
         </tr>
       </tbody>
     </table>
