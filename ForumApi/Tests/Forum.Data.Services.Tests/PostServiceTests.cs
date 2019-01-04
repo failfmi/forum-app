@@ -28,12 +28,14 @@ namespace Forum.Data.Services.Tests
         private readonly IRepository<Post> postRepository;
         private readonly IRepository<User> userRepository;
         private readonly IPostService postService;
+        private readonly ForumContext context;
+        private readonly IMapper mapper;
 
         public PostServiceTests()
         {
             var options = new DbContextOptionsBuilder<ForumContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-            var context = new ForumContext(options);
+            this.context = new ForumContext(options);
 
             this.postRepository = new Repository<Post>(context);
             this.categoryRepository = new Repository<Category>(context);
@@ -44,7 +46,7 @@ namespace Forum.Data.Services.Tests
 
             var mapperProfile = new MapInitialization();
             var conf = new MapperConfiguration(cfg => cfg.AddProfile(mapperProfile));
-            var mapper = new Mapper(conf);
+            this.mapper = new Mapper(conf);
 
             var fakeUserManager = new FakeUserManager(userStore);
 
@@ -148,22 +150,31 @@ namespace Forum.Data.Services.Tests
         public async Task EditSuccessfully(string email, string username, string title, string description, string newTitle, string newDescription)
         {
             await this.Seed();
-
+            var userId = this.userRepository.Query().AsNoTracking().Last().Id;
             var categoryId = this.categoryRepository.Query().ToList().Last().Id;
-            var postModel = new PostInputEditModel
+            var postToBeAdded = new Post
             {
-                Id = 1,
                 CategoryId = categoryId,
                 Title = title,
-                Body = description
+                Body = description,
+                AuthorId = userId,
+                CreationDate = DateTime.UtcNow
             };
 
-            await this.postService.Create(postModel, email);
+            await this.postRepository.AddAsync(postToBeAdded);
+            await this.postRepository.SaveChangesAsync();
+            this.context.Entry(postToBeAdded).State = EntityState.Detached;
 
-            postModel.Title = newTitle;
-            postModel.Body = newDescription;
+            var postModel = this.postRepository.Query().AsNoTracking().Last();
 
-            var edittedPost = await this.postService.Edit(postModel, email);
+            var postToEdit = new PostInputEditModel()
+            {
+                Id = postModel.Id,
+                Body = newDescription,
+                Title = newTitle,
+                CategoryId = postModel.CategoryId
+            };
+            var edittedPost = await this.postService.Edit(postToEdit, email);
 
             var post = this.postService.GetPostById(edittedPost.Id);
 
@@ -266,7 +277,7 @@ namespace Forum.Data.Services.Tests
             string invalidEmail, string actualEmail)
         {
             await this.Seed();
-            await this.userRepository.AddAsync(new User { UserName = "test", Email = "test@test.com" });
+            await this.userRepository.AddAsync(new User { UserName = invalidUser, Email = invalidEmail });
             await this.userRepository.SaveChangesAsync();
 
             var categoryId = this.categoryRepository.Query().ToList().Last().Id;
