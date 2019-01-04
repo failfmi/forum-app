@@ -20,7 +20,7 @@ namespace Forum.Web.Tests.AccountController
         }
 
         [Theory]
-        [InlineData("admin@admin.com", "12341234", "127.168.1.32")]
+        [InlineData("admin@admin.com", "12341234", "207.97.227.239")]
         public async Task GetUserLoginHistorySuccessfully(string email, string password, string expectedIp)
         {
             var token = await this.Login(email, password);
@@ -38,7 +38,7 @@ namespace Forum.Web.Tests.AccountController
         }
 
         [Theory]
-        [InlineData("admin@admin.com", "12341234", "127.168.1.32")]
+        [InlineData("admin@admin.com", "12341234", "207.97.227.239")]
         public async Task GetUserLoginHistoryFailDueToNoToken(string email, string password, string expectedIp)
         {
             var response = await this.client.GetAsync(HistoryEndpoint);

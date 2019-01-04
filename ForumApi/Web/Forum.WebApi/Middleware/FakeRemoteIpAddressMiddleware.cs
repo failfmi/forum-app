@@ -10,7 +10,7 @@ namespace Forum.WebApi.Middleware
     public class FakeRemoteIpAddressMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly IPAddress fakeIpAddress = IPAddress.Parse("127.168.1.32");
+        private readonly IPAddress fakeIpAddress = IPAddress.Parse("207.97.227.239");
 
         public FakeRemoteIpAddressMiddleware(RequestDelegate next)
         {

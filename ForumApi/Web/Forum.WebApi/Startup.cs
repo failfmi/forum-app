@@ -152,9 +152,9 @@ namespace Forum.WebApi
                 app.UseHsts();
             }
 
-            if (env.EnvironmentName == "Testing")
+            if (env.IsDevelopment() || env.EnvironmentName == "Testing")
             {
-                app.UseMiddleware<FakeRemoteIpAddressMiddleware>();
+                app.UseFakeRemoteIpAddressMiddleware();
             }
 
             app.UseCors(builder => builder
