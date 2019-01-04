@@ -82,11 +82,8 @@ namespace Forum.Services.Data
                 throw new UnauthorizedAccessException("You are not allowed for this operation.");
             }
 
-            var post = this.postRepository.Query().First(p => p.Id == model.Id);
+            var post = this.Mapper.Map<Post>(model);
 
-            post.Title = model.Title;
-            post.Body = model.Body;
-            post.CategoryId = model.CategoryId;
             post.CreationDate = DateTime.UtcNow;
             post.AuthorId = postDb?.AuthorId;
 
@@ -144,13 +141,13 @@ namespace Forum.Services.Data
                 throw new Exception($"Post with id {id} does not exist.");
             }
 
-            var category = this.postRepository.Query()
+            var post = this.postRepository.Query()
                 .Include(p => p.Author)
                 .Include(p => p.Category)
                 .Include(p => p.Comments)
                 .FirstOrDefault(c => c.Id == id);
 
-            return this.Mapper.Map<PostViewModel>(category);
+            return this.Mapper.Map<PostViewModel>(post);
         }
 
         private bool IsValidCategory(int id)
