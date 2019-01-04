@@ -27,13 +27,14 @@ namespace Forum.Data.Services.Tests
     {
         private readonly ICategoryService categoryService;
         private readonly IRepository<Category> categoryRepository;
+        private readonly ForumContext context;
 
         public CategoryServiceTests()
         {
             var guid = Guid.NewGuid().ToString();
             var options = new DbContextOptionsBuilder<ForumContext>()
                 .UseInMemoryDatabase(guid).Options;
-            var context = new ForumContext(options);
+            this.context = new ForumContext(options);
             this.categoryRepository = new Repository<Category>(context);
 
             var userStore = new UserStore<User>(context);
@@ -89,13 +90,21 @@ namespace Forum.Data.Services.Tests
         [InlineData("Test", "Test1234")]
         public async Task ShouldEditSuccessfully(string categoryName, string newName)
         {
-            await this.categoryService.Create(new CategoryInputModel { Name = categoryName });
-            var totalCategories = this.categoryService.All();
+            var category = new Category
+            {
+                Name = categoryName
+            };
+
+            await this.categoryRepository.AddAsync(category);
+            await this.categoryRepository.SaveChangesAsync();
+            this.context.Entry(category).State = EntityState.Detached;
+
+            var categoryToEdit = this.categoryRepository.Query().AsNoTracking().Last();
 
             var edit = await this.categoryService.Edit(new CategoryInputEditModel
-            { Id = totalCategories.Last().Id, Name = newName });
+            { Id = categoryToEdit.Id, Name = newName });
 
-            totalCategories = this.categoryService.All();
+            var totalCategories = this.categoryService.All();
             Assert.Equal(newName, totalCategories.Last().Name);
         }
 
