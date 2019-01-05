@@ -41,6 +41,9 @@ export class HomeComponent extends BaseComponent implements OnInit {
             }
             return cat;
           });
+          if (this.categories.length > 8) {
+            this.categories = this.categories.splice(0, 8);
+          }
           this.leftCatSet =
               this.categories.splice(0, Math.ceil(this.categories.length / 2)); // gets the bigger half of the array
           if (this.leftCatSet.length > 5) {

@@ -7,13 +7,24 @@ namespace Forum.Data.DataTransferObjects.InputModels.ContactUs
 {
     public class ContactUsInputModel
     {
-        [Required, EmailAddress, MinLength(4, ErrorMessage = "Email must be at least 4 symbols"), MaxLength(50, ErrorMessage = "Email must be maximum 50 symbols.")]
+        private const int SubjectMinLength = 5;
+        private const int SubjectMaxLength = 100;
+        private const string SubjectMessage = "Subject must be between 5 symbols and 100 symbols";
+
+        private const int DescriptionMinLength = 10;
+        private const int DescriptionMaxLength = 2000;
+        private const string DescriptionMessage = "Description must be between 10 symbols and 2000 symbols";
+
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
-        [Required, MinLength(5, ErrorMessage = "Subject must be at least 5 symbols."), MaxLength(100, ErrorMessage = "Subject must be maximum 50 symbols.")]
+        [Required]
+        [StringLength(SubjectMaxLength, MinimumLength = SubjectMinLength, ErrorMessage = SubjectMessage)]
         public string Subject { get; set; }
 
-        [Required, MinLength(20, ErrorMessage = "Description must be at least 20 symbols."), MaxLength(1000, ErrorMessage = "Description must be maximum 1 000 symbols.")]
+        [Required]
+        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = DescriptionMessage)]
         public string Description { get; set; }
     }
 }

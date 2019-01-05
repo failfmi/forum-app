@@ -7,10 +7,15 @@ namespace Forum.Data.DataTransferObjects.InputModels.Comment
 {
     public class CommentInputEditModel
     {
+        private const int CommentMinLength = 6;
+        private const int CommentMaxLength = 200;
+        private const string Message = "Comment must be between 6 and 200 symbols";
+
         [Required]
         public int Id { get; set; }
 
-        [Required, MinLength(6, ErrorMessage = "Comment Edit Text must be at least 6 symbols."), MaxLength(200, ErrorMessage = "Comment Text must be maximum 200 symbols.")]
+        [Required]
+        [StringLength(CommentMaxLength, MinimumLength = CommentMinLength, ErrorMessage = Message)]
         public string Text { get; set; }
     }
 }

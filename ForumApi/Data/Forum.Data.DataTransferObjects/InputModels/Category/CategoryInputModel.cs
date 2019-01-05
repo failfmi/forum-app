@@ -7,7 +7,12 @@ namespace Forum.Data.DataTransferObjects.InputModels.Category
 {
     public class CategoryInputModel
     {
-        [Required, MinLength(3, ErrorMessage = "Category Name must be at least 3 symbols"), MaxLength(20, ErrorMessage = "Category Name must be maximum 20 symbols")]
+        private const int NameMinLength = 3;
+        private const int NameMaxLength = 20;
+        private const string Message = "Category Name must be between 3 and 20 symbols";
+
+        [Required]
+        [StringLength(NameMaxLength, MinimumLength = NameMinLength, ErrorMessage = Message)]
         public string Name { get; set; }
     }
 }
