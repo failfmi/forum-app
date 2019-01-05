@@ -25,29 +25,6 @@ namespace Forum.Web.Tests
         {
         }
 
-        //[Theory]
-        //[InlineData(1, "Testing Title", "Testing body")]
-        //public async Task CreatePostFailDueToNoAuthorization(int categoryId, string title, string body)
-        //{
-        //    var category = new PostInputModel
-        //    {
-        //        CategoryId = categoryId,
-        //        Title = title,
-        //        Body = body
-        //    };
-
-        //    var json = new StringContent(
-        //        JsonConvert.SerializeObject(category),
-        //        Encoding.UTF8,
-        //        "application/json");
-
-        //    var response = await this.client.PostAsync(PostCreateEndpoint, json);
-
-        //    var content = JsonConvert.DeserializeObject<ReturnMessage>(await response.Content.ReadAsStringAsync());
-
-        //    Assert.Equal(StatusCodes.Status401Unauthorized, content.Status);
-        //}
-
         [Theory]
         [InlineData("admin@admin.com", "12341234", 1, "Test Title", "Test Body with many letters")]
         public async Task CreatePostSuccessfully(string email, string password, int categoryId, string title,
